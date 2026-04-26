@@ -446,123 +446,12 @@
   .r-answer-btn.wrong { background: #FEE2E2; border-color: var(--danger); color: var(--danger); }
   .r-answer-btn:disabled { cursor: default; }
 
-  /* ───── Speaking ───── */
-  .speaking-intro {
-    background: linear-gradient(135deg, #7C3AED, #5B21B6);
-    border-radius: var(--radius);
-    padding: 20px;
-    color: white;
-    margin-bottom: 16px;
-    text-align: center;
+  /* ───── Reset button ───── */
+  .btn-reset {
+    background: #FEF2F2;
+    color: var(--danger);
+    border: 2px solid #FECACA !important;
   }
-  .speaking-intro h3 { font-size: 1.1rem; margin-bottom: 6px; }
-  .speaking-intro p { font-size: 0.88rem; opacity: 0.9; line-height: 1.4; }
-
-  .speak-tabs {
-    display: flex;
-    background: white;
-    border-radius: 12px;
-    padding: 4px;
-    margin-bottom: 14px;
-    box-shadow: var(--shadow);
-  }
-  .speak-tab {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    background: none;
-    border-radius: 10px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    color: var(--muted);
-    transition: all 0.2s;
-  }
-  .speak-tab.active { background: #7C3AED; color: white; }
-
-  .phrase-category {
-    background: white;
-    border-radius: var(--radius);
-    margin-bottom: 12px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-  }
-  .phrase-cat-header {
-    padding: 14px 18px;
-    font-weight: 700;
-    font-size: 0.95rem;
-    background: #F8F9FA;
-    border-bottom: 1px solid var(--border);
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .phrase-cat-header .cat-icon { font-size: 1.2rem; }
-  .phrase-list { display: none; }
-  .phrase-list.open { display: block; }
-  .phrase-item {
-    display: flex;
-    align-items: center;
-    padding: 14px 18px;
-    border-bottom: 1px solid var(--border);
-    gap: 12px;
-  }
-  .phrase-item:last-child { border-bottom: none; }
-  .phrase-text { flex: 1; }
-  .phrase-text .nl { font-size: 1rem; font-weight: 600; }
-  .phrase-text .en { font-size: 0.82rem; color: var(--muted); margin-top: 2px; }
-  .speak-btn {
-    background: #EDE9FE;
-    border: none;
-    border-radius: 50%;
-    width: 40px; height: 40px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    flex-shrink: 0;
-    transition: background 0.2s;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .speak-btn:active { background: #DDD6FE; }
-
-  /* Speaking QA practice */
-  .qa-card {
-    background: white;
-    border-radius: var(--radius);
-    padding: 20px;
-    margin-bottom: 12px;
-    box-shadow: var(--shadow);
-  }
-  .qa-card .qa-label {
-    font-size: 0.75rem;
-    color: #7C3AED;
-    font-weight: 700;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-  .qa-question { font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; }
-  .qa-translation { font-size: 0.88rem; color: var(--muted); margin-bottom: 14px; font-style: italic; }
-  .qa-answer-reveal {
-    background: #F5F3FF;
-    border-radius: 10px;
-    padding: 12px 16px;
-    display: none;
-  }
-  .qa-answer-reveal.show { display: block; }
-  .qa-answer-reveal .answer-nl { font-size: 1rem; font-weight: 600; color: #7C3AED; }
-  .qa-answer-reveal .answer-en { font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
-  .qa-action-row { display: flex; gap: 8px; margin-top: 10px; }
-  .qa-action-btn {
-    flex: 1;
-    padding: 10px;
-    border-radius: 10px;
-    border: none;
-    font-size: 0.88rem;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  .qa-listen { background: #EDE9FE; color: #7C3AED; }
-  .qa-show-answer { background: #7C3AED; color: white; }
 
   /* ───── Weak review banner ───── */
   .weak-banner {
@@ -637,13 +526,6 @@
         <div class="progress-line"><span class="reading-bar" id="readingProgressBar" style="width:0%"></span></div>
       </div>
     </button>
-    <button class="mode-card speaking" onclick="showPage('speaking')">
-      <div class="mode-icon speaking">🎤</div>
-      <div class="mode-info">
-        <h3>Speaking Practice</h3>
-        <p>Listen to Dutch pronunciation &amp; practise Q&amp;A conversations</p>
-      </div>
-    </button>
   </div>
 </div>
 
@@ -698,6 +580,7 @@
       <div class="score-actions">
         <button class="btn-primary" onclick="restartQuiz()">Try again 🔄</button>
         <button class="btn-secondary" onclick="startWeakReview()">Review wrong answers ⚠️</button>
+        <button class="btn-secondary btn-reset" onclick="resetKnsProgress()">Reset all progress 🗑️</button>
         <button class="btn-secondary" onclick="showPage('home')">Back to home</button>
       </div>
     </div>
@@ -739,26 +622,11 @@
       <p id="rScoreMessage"></p>
       <div class="score-actions">
         <button class="btn-primary" onclick="restartReading()">Try again 🔄</button>
+        <button class="btn-secondary btn-reset" onclick="resetReadingProgress()">Reset all progress 🗑️</button>
         <button class="btn-secondary" onclick="showPage('home')">Back to home</button>
       </div>
     </div>
   </div>
-</div>
-
-<!-- Speaking Page -->
-<div id="pageSpeaking" class="page">
-  <div class="speaking-intro">
-    <h3>🎤 Speaking Practice</h3>
-    <p>Tap 🔊 to hear Dutch pronunciation. Practise speaking out loud – clarity matters more than perfection!</p>
-  </div>
-  <div class="speak-tabs">
-    <button class="speak-tab active" id="tabPhrases" onclick="switchSpeakTab('phrases')">Phrases</button>
-    <button class="speak-tab" id="tabQA" onclick="switchSpeakTab('qa')">Q &amp; A</button>
-    <button class="speak-tab" id="tabSentences" onclick="switchSpeakTab('sentences')">Sentences</button>
-  </div>
-  <div id="phrasesView"></div>
-  <div id="qaView" style="display:none"></div>
-  <div id="sentencesView" style="display:none"></div>
 </div>
 
 <!-- Bottom Nav -->
@@ -774,10 +642,6 @@
   <button class="nav-btn" id="navReading" onclick="showPage('reading')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
     Reading
-  </button>
-  <button class="nav-btn" id="navSpeaking" onclick="showPage('speaking')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-    Speaking
   </button>
 </nav>
 
@@ -1071,131 +935,6 @@ const readingExercises = [
   }
 ];
 
-// ═══════════════════════════════════════
-//  DATA — SPEAKING PHRASES
-// ═══════════════════════════════════════
-const phraseCategories = [
-  {
-    icon: "👋", title: "Greetings & Basics",
-    phrases: [
-      { nl: "Goedemorgen", en: "Good morning" },
-      { nl: "Goedemiddag", en: "Good afternoon" },
-      { nl: "Goedenavond", en: "Good evening" },
-      { nl: "Hoe gaat het met u?", en: "How are you? (formal)" },
-      { nl: "Goed, dank u. En u?", en: "Fine, thank you. And you?" },
-      { nl: "Tot ziens", en: "Goodbye" },
-      { nl: "Tot later", en: "See you later" },
-      { nl: "Alstublieft", en: "Please / Here you go (formal)" },
-      { nl: "Dank u wel", en: "Thank you very much" },
-      { nl: "Graag gedaan", en: "You're welcome" },
-      { nl: "Excuseert u mij", en: "Excuse me (formal)" },
-      { nl: "Sorry", en: "Sorry" },
-    ]
-  },
-  {
-    icon: "🙋", title: "About Yourself",
-    phrases: [
-      { nl: "Mijn naam is Temwa", en: "My name is Temwa" },
-      { nl: "Ik kom uit Malawi", en: "I come from Malawi" },
-      { nl: "Ik woon in …", en: "I live in …" },
-      { nl: "Ik ben getrouwd", en: "I am married" },
-      { nl: "Mijn man heet Jorg", en: "My husband's name is Jorg" },
-      { nl: "Ik heb geen kinderen", en: "I do not have children" },
-      { nl: "Ik leer Nederlands", en: "I am learning Dutch" },
-      { nl: "Ik spreek een beetje Nederlands", en: "I speak a little Dutch" },
-      { nl: "Kunt u dat herhalen?", en: "Can you repeat that?" },
-      { nl: "Ik begrijp het niet", en: "I do not understand" },
-      { nl: "Spreekt u Engels?", en: "Do you speak English?" },
-    ]
-  },
-  {
-    icon: "🏥", title: "Health & Doctors",
-    phrases: [
-      { nl: "Ik ben ziek", en: "I am ill" },
-      { nl: "Ik heb pijn", en: "I am in pain" },
-      { nl: "Ik wil een afspraak maken", en: "I want to make an appointment" },
-      { nl: "Ik heb koorts", en: "I have a fever" },
-      { nl: "Ik heb hoofdpijn", en: "I have a headache" },
-      { nl: "Bel een dokter!", en: "Call a doctor!" },
-      { nl: "Bel 112!", en: "Call 112! (emergency)" },
-      { nl: "Waar is de apotheek?", en: "Where is the pharmacy?" },
-      { nl: "Ik heb een recept", en: "I have a prescription" },
-    ]
-  },
-  {
-    icon: "🛒", title: "Shopping & Money",
-    phrases: [
-      { nl: "Hoeveel kost dit?", en: "How much does this cost?" },
-      { nl: "Ik wil dit kopen", en: "I want to buy this" },
-      { nl: "Heeft u een kleiner maat?", en: "Do you have a smaller size?" },
-      { nl: "Ik betaal met de pas", en: "I pay by card" },
-      { nl: "Kunt u een kassabon geven?", en: "Can you give me a receipt?" },
-      { nl: "Waar is de supermarkt?", en: "Where is the supermarket?" },
-      { nl: "Te duur", en: "Too expensive" },
-    ]
-  },
-  {
-    icon: "🚆", title: "Transport & Directions",
-    phrases: [
-      { nl: "Waar is het station?", en: "Where is the train station?" },
-      { nl: "Een enkeltje naar Amsterdam", en: "A single ticket to Amsterdam" },
-      { nl: "Hoe laat vertrekt de trein?", en: "What time does the train leave?" },
-      { nl: "Ik zoek de bushalte", en: "I am looking for the bus stop" },
-      { nl: "Rechts / Links / Rechtdoor", en: "Right / Left / Straight ahead" },
-      { nl: "Hoe ver is het?", en: "How far is it?" },
-      { nl: "Mag ik uw fiets lenen?", en: "May I borrow your bicycle?" },
-    ]
-  },
-  {
-    icon: "🏛️", title: "Dutch Society (KNS vocabulary)",
-    phrases: [
-      { nl: "de grondwet", en: "the constitution" },
-      { nl: "de minister-president", en: "the prime minister" },
-      { nl: "de Tweede Kamer", en: "the House of Representatives" },
-      { nl: "de dijken", en: "the dikes / levees" },
-      { nl: "de scheiding van kerk en staat", en: "the separation of church and state" },
-      { nl: "de democratie", en: "democracy" },
-      { nl: "de huisarts", en: "the GP / family doctor" },
-      { nl: "de apotheek", en: "the pharmacy" },
-      { nl: "het uitzendbureau", en: "the temp agency" },
-      { nl: "de leerplicht", en: "compulsory education" },
-      { nl: "voortgezet onderwijs", en: "secondary education" },
-      { nl: "de zorgverzekering", en: "health insurance" },
-      { nl: "de gastarbeiders", en: "the guest workers" },
-      { nl: "de vrijheid van meningsuiting", en: "freedom of expression" },
-    ]
-  },
-];
-
-// Speaking Q&A practice
-const speakingQA = [
-  { q: "Hoe heet u?", qen: "What is your name?", a: "Mijn naam is Temwa.", aen: "My name is Temwa." },
-  { q: "Waar woont u?", qen: "Where do you live?", a: "Ik woon in [stad].", aen: "I live in [city]." },
-  { q: "Hoe oud bent u?", qen: "How old are you?", a: "Ik ben [leeftijd] jaar oud.", aen: "I am [age] years old." },
-  { q: "Bent u getrouwd?", qen: "Are you married?", a: "Ja, ik ben getrouwd. Mijn man heet Jorg.", aen: "Yes, I am married. My husband's name is Jorg." },
-  { q: "Heeft u kinderen?", qen: "Do you have children?", a: "Nee, ik heb geen kinderen. / Ja, ik heb [aantal] kinderen.", aen: "No, I don't have children. / Yes, I have [number] children." },
-  { q: "Wat doet u?", qen: "What do you do? (occupation)", a: "Ik leer Nederlands. / Ik werk als …", aen: "I am learning Dutch. / I work as …" },
-  { q: "Wat heeft u gisteren gedaan?", qen: "What did you do yesterday?", a: "Gisteren heb ik Nederlands gestudeerd.", aen: "Yesterday I studied Dutch." },
-  { q: "Wat eet u graag?", qen: "What do you like to eat?", a: "Ik eet graag [eten]. Het is lekker.", aen: "I like to eat [food]. It is delicious." },
-  { q: "Hoe gaat het met u?", qen: "How are you?", a: "Goed, dank u wel. En met u?", aen: "Fine, thank you. And you?" },
-  { q: "Waarom wilt u naar Nederland komen?", qen: "Why do you want to come to the Netherlands?", a: "Ik wil bij mijn man wonen.", aen: "I want to live with my husband." },
-  { q: "Wat vindt u van Nederland?", qen: "What do you think of the Netherlands?", a: "Ik vind Nederland interessant. Ik wil graag Nederlands leren.", aen: "I find the Netherlands interesting. I would like to learn Dutch." },
-  { q: "Kunt u een beetje Nederlands spreken?", qen: "Can you speak a little Dutch?", a: "Ja, een beetje. Ik oefen elke dag.", aen: "Yes, a little. I practise every day." },
-];
-
-// Sentence completion practice
-const sentenceCompletion = [
-  { prompt: "Maria eet veel fruit. Zij vindt fruit ...", promptEn: "Maria eats a lot of fruit. She finds fruit ...", answer: "lekker", answerEn: "tasty / delicious" },
-  { prompt: "Peter is ziek. Hij gaat naar ...", promptEn: "Peter is ill. He goes to ...", answer: "de huisarts", answerEn: "the GP / doctor" },
-  { prompt: "Het is koud buiten. Ik trek een ... aan.", promptEn: "It is cold outside. I put on a ...", answer: "jas", answerEn: "coat" },
-  { prompt: "Ik heb pijn. Ik ga naar ...", promptEn: "I am in pain. I go to ...", answer: "de dokter", answerEn: "the doctor" },
-  { prompt: "Ik wil medicijnen. Ik ga naar ...", promptEn: "I want medicine. I go to ...", answer: "de apotheek", answerEn: "the pharmacy" },
-  { prompt: "De trein gaat naar Amsterdam. Ik koop een ...", promptEn: "The train goes to Amsterdam. I buy a ...", answer: "kaartje", answerEn: "ticket" },
-  { prompt: "Ik zoek werk. Ik ga naar het ...", promptEn: "I am looking for work. I go to the ...", answer: "uitzendbureau", answerEn: "temp agency" },
-  { prompt: "Het kind is zes jaar oud. Het gaat naar ...", promptEn: "The child is six years old. It goes to ...", answer: "school", answerEn: "school" },
-  { prompt: "Ik wil iemand bezoeken. Ik bel eerst om een ... te maken.", promptEn: "I want to visit someone. I call first to make an ...", answer: "afspraak", answerEn: "appointment" },
-  { prompt: "Nederland heeft veel fietsen. Dat is heel ...", promptEn: "The Netherlands has many bicycles. That is very ...", answer: "typisch Nederlands", answerEn: "typically Dutch" },
-];
 
 // ═══════════════════════════════════════
 //  STATE
@@ -1259,7 +998,6 @@ function showPage(page) {
   if (page === 'home') updateHomeStats();
   if (page === 'kns') initKnsPage();
   if (page === 'reading') initReadingPage();
-  if (page === 'speaking') initSpeakingPage();
   window.scrollTo(0, 0);
 }
 
@@ -1536,114 +1274,28 @@ function restartReading() {
 }
 
 // ═══════════════════════════════════════
-//  SPEAKING
+//  RESET
 // ═══════════════════════════════════════
-let currentSpeakTab = 'phrases';
-
-function initSpeakingPage() {
-  renderPhrases();
-  renderQA();
-  renderSentences();
+function resetKnsProgress() {
+  if (!confirm('Reset all KNS progress? This clears your score history and weak-question list.')) return;
+  state.answered = {};
+  state.totalAnswered = 0;
+  state.totalCorrect = 0;
+  saveState();
+  quiz.queue = [];
+  document.getElementById('knsScoreView').style.display = 'none';
+  document.getElementById('knsQuizView').style.display = 'block';
+  initKnsPage();
 }
 
-function switchSpeakTab(tab) {
-  currentSpeakTab = tab;
-  ['phrases','qa','sentences'].forEach(t => {
-    document.getElementById(t + 'View').style.display = t === tab ? 'block' : 'none';
-    document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('active', t === tab);
-  });
-}
-
-function speak(text) {
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel();
-    const utt = new SpeechSynthesisUtterance(text);
-    utt.lang = 'nl-NL';
-    utt.rate = 0.85;
-    window.speechSynthesis.speak(utt);
-  }
-}
-
-function renderPhrases() {
-  document.getElementById('phrasesView').innerHTML = phraseCategories.map((cat, ci) => `
-    <div class="phrase-category">
-      <div class="phrase-cat-header" onclick="toggleCat(${ci})">
-        <span>${cat.icon} ${cat.title}</span>
-        <span id="catArrow${ci}">▼</span>
-      </div>
-      <div class="phrase-list ${ci === 0 ? 'open' : ''}" id="catList${ci}">
-        ${cat.phrases.map(p => `
-          <div class="phrase-item">
-            <div class="phrase-text">
-              <div class="nl">${p.nl}</div>
-              <div class="en">${p.en}</div>
-            </div>
-            <button class="speak-btn" onclick="speak('${p.nl.replace(/'/g, "\\'")}')">🔊</button>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-  `).join('');
-}
-
-function toggleCat(ci) {
-  const list = document.getElementById('catList' + ci);
-  const arrow = document.getElementById('catArrow' + ci);
-  const open = list.classList.toggle('open');
-  arrow.textContent = open ? '▼' : '▶';
-}
-
-function renderQA() {
-  document.getElementById('qaView').innerHTML = speakingQA.map((item, i) => `
-    <div class="qa-card">
-      <div class="qa-label">Question ${i + 1}</div>
-      <div class="qa-question">${item.q}</div>
-      <div class="qa-translation">${item.qen}</div>
-      <div class="qa-action-row">
-        <button class="qa-action-btn qa-listen" onclick="speak('${item.q.replace(/'/g, "\\'")}')">🔊 Hear question</button>
-        <button class="qa-action-btn qa-show-answer" onclick="toggleQAAnswer(${i})">Show answer</button>
-      </div>
-      <div class="qa-answer-reveal" id="qaAnswer${i}">
-        <div class="answer-nl">${item.a}</div>
-        <div class="answer-en">${item.aen}</div>
-        <div style="margin-top:8px">
-          <button class="qa-action-btn qa-listen" style="font-size:0.82rem" onclick="speak('${item.a.replace(/'/g, "\\'")}')">🔊 Hear answer</button>
-        </div>
-      </div>
-    </div>
-  `).join('');
-}
-
-function toggleQAAnswer(i) {
-  const el = document.getElementById('qaAnswer' + i);
-  el.classList.toggle('show');
-}
-
-function renderSentences() {
-  document.getElementById('sentencesView').innerHTML = `
-    <div style="background:#F5F3FF;border-radius:12px;padding:14px 16px;margin-bottom:14px;font-size:0.9rem;color:#5B21B6;">
-      💡 <strong>How to practise:</strong> Read the sentence aloud, then tap 🔊 to check your Dutch. Try to complete the sentence before looking at the answer!
-    </div>
-    ${sentenceCompletion.map((s, i) => `
-      <div class="qa-card">
-        <div class="qa-label">Complete the sentence ${i + 1}</div>
-        <div class="qa-question">${s.prompt}</div>
-        <div class="qa-translation" style="font-size:0.83rem">${s.promptEn}</div>
-        <div class="qa-action-row">
-          <button class="qa-action-btn qa-listen" onclick="speak('${(s.prompt + ' ' + s.answer).replace(/'/g, "\\'")}')">🔊 Hear full sentence</button>
-          <button class="qa-action-btn qa-show-answer" onclick="toggleSentAnswer(${i})">Show answer</button>
-        </div>
-        <div class="qa-answer-reveal" id="sentAnswer${i}">
-          <div class="answer-nl">"… ${s.answer}"</div>
-          <div class="answer-en">${s.answerEn}</div>
-        </div>
-      </div>
-    `).join('')}
-  `;
-}
-
-function toggleSentAnswer(i) {
-  document.getElementById('sentAnswer' + i).classList.toggle('show');
+function resetReadingProgress() {
+  if (!confirm('Reset all Reading progress? Your score history will be cleared.')) return;
+  state.readingAnswered = {};
+  saveState();
+  readingQuiz.queue = [];
+  document.getElementById('readingScoreView').style.display = 'none';
+  document.getElementById('readingQuizView').style.display = 'block';
+  initReadingPage();
 }
 
 // ═══════════════════════════════════════
