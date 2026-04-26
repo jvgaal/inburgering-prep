@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#AE1C28">
+<title>Naar Nederland – Inburgering Prep</title>
+<style>
+  :root {
+    --red: #AE1C28;
+    --blue: #21468B;
+    --white: #FFFFFF;
+    --bg: #F2F4F8;
+    --card: #FFFFFF;
+    --text: #1A1A2E;
+    --muted: #6B7280;
+    --border: #E5E7EB;
+    --success: #16A34A;
+    --danger: #DC2626;
+    --shadow: 0 2px 12px rgba(0,0,0,0.10);
+    --radius: 16px;
+    --nav-h: 70px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: var(--nav-h);
+    overflow-x: hidden;
+  }
+
+  /* ───── Top Bar ───── */
+  .topbar {
+    background: var(--red);
+    color: white;
+    padding: 16px 20px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .topbar h1 { font-size: 1.15rem; font-weight: 700; flex: 1; }
+  .topbar .flag { font-size: 1.5rem; }
+  .topbar .streak {
+    background: rgba(255,255,255,0.2);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  /* ───── Bottom Nav ───── */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: var(--nav-h);
+    background: white;
+    border-top: 1px solid var(--border);
+    display: flex;
+    z-index: 200;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+  }
+  .nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 8px 4px 10px;
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-btn.active { color: var(--red); }
+  .nav-btn svg { width: 24px; height: 24px; }
+
+  /* ───── Pages ───── */
+  .page { display: none; padding: 16px 16px; }
+  .page.active { display: block; }
+
+  /* ───── Home ───── */
+  .home-header {
+    background: linear-gradient(135deg, var(--red) 0%, #8B0000 100%);
+    border-radius: var(--radius);
+    color: white;
+    padding: 24px 20px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .home-header h2 { font-size: 1.4rem; margin-bottom: 8px; }
+  .home-header p { opacity: 0.9; font-size: 0.95rem; line-height: 1.5; }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 14px 10px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .stat-card .stat-num { font-size: 1.6rem; font-weight: 800; color: var(--red); }
+  .stat-card .stat-label { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+  .mode-cards { display: flex; flex-direction: column; gap: 12px; }
+  .mode-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.2s, transform 0.1s;
+    text-align: left;
+    width: 100%;
+  }
+  .mode-card:active { transform: scale(0.98); }
+  .mode-card.kns { border-color: var(--red); }
+  .mode-card.reading { border-color: var(--blue); }
+  .mode-card.speaking { border-color: #7C3AED; }
+  .mode-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem;
+    flex-shrink: 0;
+  }
+  .mode-icon.kns { background: #FEE2E2; }
+  .mode-icon.reading { background: #DBEAFE; }
+  .mode-icon.speaking { background: #EDE9FE; }
+  .mode-info h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
+  .mode-info p { font-size: 0.82rem; color: var(--muted); line-height: 1.4; }
+  .mode-info .progress-line {
+    margin-top: 8px;
+    background: #F3F4F6;
+    border-radius: 4px;
+    height: 6px;
+    overflow: hidden;
+  }
+  .mode-info .progress-line span {
+    display: block; height: 100%; border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+  .mode-info .progress-line .kns-bar { background: var(--red); }
+  .mode-info .progress-line .reading-bar { background: var(--blue); }
+
+  /* ───── KNS Quiz ───── */
+  .quiz-progress {
+    background: white;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+  }
+  .quiz-progress-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .quiz-progress-top span { font-size: 0.85rem; font-weight: 600; color: var(--muted); }
+  .quiz-progress-top .q-num { color: var(--text); font-size: 1rem; }
+  .progress-bar {
+    height: 8px;
+    background: #F3F4F6;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--red), #E85D6B);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+
+  .theme-badge {
+    display: inline-block;
+    background: #FEE2E2;
+    color: var(--red);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .question-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 22px 20px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+    min-height: 120px;
+  }
+  .question-card .q-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .question-card .q-translation {
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-style: italic;
+    line-height: 1.4;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+  }
+  .translate-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    cursor: pointer;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .answer-btns { display: flex; flex-direction: column; gap: 10px; }
+  .answer-btn {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: all 0.15s;
+    width: 100%;
+    color: var(--text);
+  }
+  .answer-btn:active:not(:disabled) { transform: scale(0.98); }
+  .answer-btn .label {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: #F3F4F6;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .answer-btn.correct {
+    background: #DCFCE7;
+    border-color: var(--success);
+    color: var(--success);
+  }
+  .answer-btn.correct .label { background: var(--success); color: white; }
+  .answer-btn.wrong {
+    background: #FEE2E2;
+    border-color: var(--danger);
+    color: var(--danger);
+  }
+  .answer-btn.wrong .label { background: var(--danger); color: white; }
+  .answer-btn:disabled { cursor: default; }
+
+  .feedback-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-top: 12px;
+    box-shadow: var(--shadow);
+    display: none;
+  }
+  .feedback-card.show { display: block; }
+  .feedback-card .fb-correct { color: var(--success); font-weight: 700; font-size: 1rem; }
+  .feedback-card .fb-wrong { color: var(--danger); font-weight: 700; font-size: 1rem; }
+  .feedback-card p { font-size: 0.88rem; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+
+  .next-btn {
+    margin-top: 14px;
+    width: 100%;
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: none;
+    transition: opacity 0.2s;
+  }
+  .next-btn.show { display: block; }
+  .next-btn:active { opacity: 0.85; }
+
+  /* ───── Quiz Controls ───── */
+  .quiz-controls {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .ctrl-btn {
+    flex: 1;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+  .ctrl-btn.active-ctrl {
+    background: var(--red);
+    color: white;
+    border-color: var(--red);
+  }
+
+  /* ───── Filter chips ───── */
+  .chips {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    margin-bottom: 12px;
+    scrollbar-width: none;
+  }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+  .chip.active { background: var(--red); color: white; border-color: var(--red); }
+
+  /* ───── Score Screen ───── */
+  .score-screen {
+    text-align: center;
+    padding: 20px 0;
+  }
+  .score-circle {
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--red), #E85D6B);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    color: white;
+    box-shadow: 0 8px 24px rgba(174,28,40,0.35);
+  }
+  .score-circle .score-num { font-size: 2.8rem; font-weight: 900; line-height: 1; }
+  .score-circle .score-denom { font-size: 1rem; opacity: 0.8; }
+  .score-screen h2 { font-size: 1.4rem; margin-bottom: 8px; }
+  .score-screen p { color: var(--muted); font-size: 0.95rem; margin-bottom: 24px; }
+  .score-actions { display: flex; flex-direction: column; gap: 10px; }
+  .score-actions button {
+    padding: 15px;
+    border-radius: 12px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .btn-primary { background: var(--red); color: white; }
+  .btn-secondary { background: white; color: var(--text); border: 2px solid var(--border) !important; }
+
+  /* ───── Reading ───── */
+  .reading-text-card {
+    background: var(--blue);
+    color: white;
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+  }
+  .reading-text-card .text-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .reading-text-card .dutch-text {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    font-weight: 500;
+  }
+  .reading-question-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+  }
+  .reading-question-card .rq-label {
+    font-size: 0.78rem;
+    color: var(--blue);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .reading-question-card .rq-text { font-size: 1rem; font-weight: 600; margin-bottom: 14px; }
+  .r-answer-btn {
+    background: #F8F9FA;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 16px;
+    font-size: 0.95rem;
+    text-align: left;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    margin-bottom: 8px;
+    color: var(--text);
+    transition: all 0.15s;
+    font-weight: 500;
+  }
+  .r-answer-btn.correct { background: #DCFCE7; border-color: var(--success); color: var(--success); font-weight: 700; }
+  .r-answer-btn.wrong { background: #FEE2E2; border-color: var(--danger); color: var(--danger); }
+  .r-answer-btn:disabled { cursor: default; }
+
+  /* ───── Speaking ───── */
+  .speaking-intro {
+    background: linear-gradient(135deg, #7C3AED, #5B21B6);
+    border-radius: var(--radius);
+    padding: 20px;
+    color: white;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .speaking-intro h3 { font-size: 1.1rem; margin-bottom: 6px; }
+  .speaking-intro p { font-size: 0.88rem; opacity: 0.9; line-height: 1.4; }
+
+  .speak-tabs {
+    display: flex;
+    background: white;
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+  }
+  .speak-tab {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: none;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+  .speak-tab.active { background: #7C3AED; color: white; }
+
+  .phrase-category {
+    background: white;
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .phrase-cat-header {
+    padding: 14px 18px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    background: #F8F9FA;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .phrase-cat-header .cat-icon { font-size: 1.2rem; }
+  .phrase-list { display: none; }
+  .phrase-list.open { display: block; }
+  .phrase-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+  }
+  .phrase-item:last-child { border-bottom: none; }
+  .phrase-text { flex: 1; }
+  .phrase-text .nl { font-size: 1rem; font-weight: 600; }
+  .phrase-text .en { font-size: 0.82rem; color: var(--muted); margin-top: 2px; }
+  .speak-btn {
+    background: #EDE9FE;
+    border: none;
+    border-radius: 50%;
+    width: 40px; height: 40px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .speak-btn:active { background: #DDD6FE; }
+
+  /* Speaking QA practice */
+  .qa-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+  }
+  .qa-card .qa-label {
+    font-size: 0.75rem;
+    color: #7C3AED;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .qa-question { font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; }
+  .qa-translation { font-size: 0.88rem; color: var(--muted); margin-bottom: 14px; font-style: italic; }
+  .qa-answer-reveal {
+    background: #F5F3FF;
+    border-radius: 10px;
+    padding: 12px 16px;
+    display: none;
+  }
+  .qa-answer-reveal.show { display: block; }
+  .qa-answer-reveal .answer-nl { font-size: 1rem; font-weight: 600; color: #7C3AED; }
+  .qa-answer-reveal .answer-en { font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
+  .qa-action-row { display: flex; gap: 8px; margin-top: 10px; }
+  .qa-action-btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .qa-listen { background: #EDE9FE; color: #7C3AED; }
+  .qa-show-answer { background: #7C3AED; color: white; }
+
+  /* ───── Weak review banner ───── */
+  .weak-banner {
+    background: #FFF7ED;
+    border: 1px solid #FDBA74;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+  }
+  .weak-banner span { font-size: 0.88rem; flex: 1; color: #92400E; }
+  .weak-banner .weak-count {
+    background: #F97316;
+    color: white;
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="topbar">
+  <span class="flag">🇳🇱</span>
+  <h1>Inburgering Prep</h1>
+  <span class="streak" id="streakBadge">🔥 0 days</span>
+</div>
+
+<!-- Pages -->
+<div id="pageHome" class="page active">
+  <div class="home-header">
+    <h2>Welkom, Temwa! 👋</h2>
+    <p>You're preparing for the Basic Civic Integration Exam (Basisexamen Buitenland). Keep going – every question gets you closer to the Netherlands!</p>
+  </div>
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" id="statAnswered">0</div>
+      <div class="stat-label">Questions answered</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statCorrect">0</div>
+      <div class="stat-label">Correct</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statStreak">0</div>
+      <div class="stat-label">Day streak</div>
+    </div>
+  </div>
+  <div id="weakBannerHome" class="weak-banner" style="display:none" onclick="startWeakReview()">
+    <span>⚠️ Review your weak questions</span>
+    <span class="weak-count" id="weakCount">0</span>
+  </div>
+  <div class="mode-cards">
+    <button class="mode-card kns" onclick="showPage('kns')">
+      <div class="mode-icon kns">🏛️</div>
+      <div class="mode-info">
+        <h3>KNS Quiz</h3>
+        <p>All 100 official Knowledge of Dutch Society questions with A/B choices</p>
+        <div class="progress-line"><span class="kns-bar" id="knsProgressBar" style="width:0%"></span></div>
+      </div>
+    </button>
+    <button class="mode-card reading" onclick="showPage('reading')">
+      <div class="mode-icon reading">📖</div>
+      <div class="mode-info">
+        <h3>Reading Drills</h3>
+        <p>Dutch texts at A1 level – signs, notices, messages, instructions</p>
+        <div class="progress-line"><span class="reading-bar" id="readingProgressBar" style="width:0%"></span></div>
+      </div>
+    </button>
+    <button class="mode-card speaking" onclick="showPage('speaking')">
+      <div class="mode-icon speaking">🎤</div>
+      <div class="mode-info">
+        <h3>Speaking Practice</h3>
+        <p>Listen to Dutch pronunciation &amp; practise Q&amp;A conversations</p>
+      </div>
+    </button>
+  </div>
+</div>
+
+<!-- KNS Quiz Page -->
+<div id="pageKns" class="page">
+  <div id="knsQuizView">
+    <div class="quiz-controls">
+      <button class="ctrl-btn active-ctrl" id="ctrlAll" onclick="setMode('all')">All 100</button>
+      <button class="ctrl-btn" id="ctrlWeak" onclick="setMode('weak')">Weak only</button>
+      <button class="ctrl-btn" id="ctrlRandom" onclick="setMode('random')">Random 30</button>
+    </div>
+    <div class="chips" id="themeChips"></div>
+    <div class="quiz-progress">
+      <div class="quiz-progress-top">
+        <span class="q-num" id="qNum">Question 1 / 100</span>
+        <span id="qScore">✅ 0 &nbsp; ❌ 0</span>
+      </div>
+      <div class="progress-bar"><div class="progress-bar-fill" id="qProgressFill" style="width:1%"></div></div>
+    </div>
+    <div class="theme-badge" id="themeBadge">Geografie</div>
+    <button class="translate-toggle" id="translateToggle" onclick="toggleTranslation()">
+      🇬🇧 Show English translation
+    </button>
+    <div class="question-card">
+      <div class="q-text" id="questionText"></div>
+      <div class="q-translation" id="questionTranslation" style="display:none"></div>
+    </div>
+    <div class="answer-btns">
+      <button class="answer-btn" id="btnA" onclick="submitAnswer('a')">
+        <span class="label">A</span>
+        <span id="answerAText"></span>
+      </button>
+      <button class="answer-btn" id="btnB" onclick="submitAnswer('b')">
+        <span class="label">B</span>
+        <span id="answerBText"></span>
+      </button>
+    </div>
+    <div class="feedback-card" id="feedbackCard">
+      <div id="feedbackHeader"></div>
+      <p id="feedbackDetail"></p>
+    </div>
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next question →</button>
+  </div>
+  <div id="knsScoreView" style="display:none">
+    <div class="score-screen">
+      <div class="score-circle">
+        <div class="score-num" id="finalScore">0</div>
+        <div class="score-denom" id="finalDenom">/ 100</div>
+      </div>
+      <h2 id="scoreTitle">Well done!</h2>
+      <p id="scoreMessage">Keep practising to master all 100 questions.</p>
+      <div class="score-actions">
+        <button class="btn-primary" onclick="restartQuiz()">Try again 🔄</button>
+        <button class="btn-secondary" onclick="startWeakReview()">Review wrong answers ⚠️</button>
+        <button class="btn-secondary" onclick="showPage('home')">Back to home</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Reading Page -->
+<div id="pageReading" class="page">
+  <div id="readingQuizView">
+    <div class="quiz-progress">
+      <div class="quiz-progress-top">
+        <span class="q-num" id="rqNum">Exercise 1 / 20</span>
+        <span id="rqScore">✅ 0 &nbsp; ❌ 0</span>
+      </div>
+      <div class="progress-bar"><div class="progress-bar-fill" id="rqProgressFill" style="width:5%"></div></div>
+    </div>
+    <div class="reading-text-card">
+      <div class="text-label" id="readingContextLabel">📋 Notice</div>
+      <div class="dutch-text" id="readingText"></div>
+    </div>
+    <div class="reading-question-card">
+      <div class="rq-label">❓ Question</div>
+      <div class="rq-text" id="readingQuestion"></div>
+      <div id="readingOptions"></div>
+    </div>
+    <div class="feedback-card" id="rFeedbackCard">
+      <div id="rFeedbackHeader"></div>
+      <p id="rFeedbackDetail"></p>
+    </div>
+    <button class="next-btn" id="rNextBtn" onclick="nextReadingQ()">Next →</button>
+  </div>
+  <div id="readingScoreView" style="display:none">
+    <div class="score-screen">
+      <div class="score-circle" style="background: linear-gradient(135deg, var(--blue), #1E40AF);">
+        <div class="score-num" id="rFinalScore">0</div>
+        <div class="score-denom">/ 20</div>
+      </div>
+      <h2 id="rScoreTitle">Reading done!</h2>
+      <p id="rScoreMessage"></p>
+      <div class="score-actions">
+        <button class="btn-primary" onclick="restartReading()">Try again 🔄</button>
+        <button class="btn-secondary" onclick="showPage('home')">Back to home</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Speaking Page -->
+<div id="pageSpeaking" class="page">
+  <div class="speaking-intro">
+    <h3>🎤 Speaking Practice</h3>
+    <p>Tap 🔊 to hear Dutch pronunciation. Practise speaking out loud – clarity matters more than perfection!</p>
+  </div>
+  <div class="speak-tabs">
+    <button class="speak-tab active" id="tabPhrases" onclick="switchSpeakTab('phrases')">Phrases</button>
+    <button class="speak-tab" id="tabQA" onclick="switchSpeakTab('qa')">Q &amp; A</button>
+    <button class="speak-tab" id="tabSentences" onclick="switchSpeakTab('sentences')">Sentences</button>
+  </div>
+  <div id="phrasesView"></div>
+  <div id="qaView" style="display:none"></div>
+  <div id="sentencesView" style="display:none"></div>
+</div>
+
+<!-- Bottom Nav -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" id="navHome" onclick="showPage('home')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Home
+  </button>
+  <button class="nav-btn" id="navKns" onclick="showPage('kns')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    KNS Quiz
+  </button>
+  <button class="nav-btn" id="navReading" onclick="showPage('reading')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+    Reading
+  </button>
+  <button class="nav-btn" id="navSpeaking" onclick="showPage('speaking')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+    Speaking
+  </button>
+</nav>
+
+<script>
+// ═══════════════════════════════════════
+//  DATA — 100 KNS QUESTIONS
+// ═══════════════════════════════════════
+const knsQuestions = [
+  // ── GEOGRAFIE & WONEN ──
+  { id:1, theme:"Geografie", q:"In welk deel van de wereld ligt Nederland?", qt:"In which part of the world is the Netherlands located?", a:"Europa", at:"Europe", b:"Zuid-Amerika", bt:"South America", correct:"a", note:"The Netherlands is in north-western Europe." },
+  { id:2, theme:"Geografie", q:"Welk land ligt ten zuiden van Nederland?", qt:"Which country is south of the Netherlands?", a:"België", at:"Belgium", b:"Duitsland", bt:"Germany", correct:"a", note:"Belgium borders the Netherlands to the south; Germany to the east." },
+  { id:3, theme:"Geografie", q:"Welk land ligt ten oosten van Nederland?", qt:"Which country is east of the Netherlands?", a:"België", at:"Belgium", b:"Duitsland", bt:"Germany", correct:"b", note:"Germany borders the Netherlands to the east." },
+  { id:4, theme:"Geografie", q:"Welk land is groter – Marokko of Nederland?", qt:"Which country is bigger – Morocco or the Netherlands?", a:"Marokko", at:"Morocco", b:"Nederland", bt:"Netherlands", correct:"a", note:"Morocco (446,550 km²) is much larger than the Netherlands (41,543 km²)." },
+  { id:5, theme:"Geografie", q:"Welk land is kleiner – Nederland of Turkije?", qt:"Which country is smaller – the Netherlands or Turkey?", a:"Nederland", at:"Netherlands", b:"Turkije", bt:"Turkey", correct:"a", note:"The Netherlands is far smaller than Turkey." },
+  { id:6, theme:"Geografie", q:"Wat betekent het woord 'Nederland'?", qt:"What does the word 'Nederland' mean?", a:"Laag land", at:"Low land", b:"Waterland", bt:"Water land", correct:"a", note:"'Neder' means low – much of the Netherlands is below sea level." },
+  { id:7, theme:"Geografie", q:"Kijk naar de foto. Wat is dit? (een grote dam van grond)", qt:"Look at the photo. What is this? (a large earthen barrier)", a:"Een dijk", at:"A dike/levee", b:"Een haven", bt:"A harbour", correct:"a", note:"Dikes protect the low-lying Netherlands from flooding." },
+  { id:8, theme:"Geografie", q:"Wat gebeurt er met Nederland als er geen dijken zijn?", qt:"What happens to the Netherlands if there are no dikes?", a:"Nederland staat onder water", at:"The Netherlands floods", b:"Nederland krijgt meer regen", bt:"The Netherlands gets more rain", correct:"a", note:"About 26% of the Netherlands is below sea level." },
+  { id:9, theme:"Geografie", q:"Welke stad ligt in de Randstad?", qt:"Which city is in the Randstad urban region?", a:"Utrecht", at:"Utrecht", b:"Eindhoven", bt:"Eindhoven", correct:"a", note:"The Randstad includes Amsterdam, Rotterdam, Den Haag and Utrecht." },
+  { id:10, theme:"Geografie", q:"In Nederland, wonen daar veel mensen of weinig mensen?", qt:"Does many or few people live in the Netherlands?", a:"Veel mensen", at:"Many people", b:"Weinig mensen", bt:"Few people", correct:"a", note:"The Netherlands has ~18 million people in a small area – very densely populated." },
+  { id:11, theme:"Geografie", q:"Wat is de hoofdstad van Nederland?", qt:"What is the capital city of the Netherlands?", a:"Amsterdam", at:"Amsterdam", b:"Den Haag", bt:"The Hague", correct:"a", note:"Amsterdam is the official capital; Den Haag is the seat of government." },
+  { id:12, theme:"Geografie", q:"In welke stad zit de regering van Nederland?", qt:"In which city is the Dutch government located?", a:"Rotterdam", at:"Rotterdam", b:"Den Haag", bt:"The Hague", correct:"b", note:"Parliament (Tweede Kamer) and most ministries are in Den Haag." },
+  { id:13, theme:"Geografie", q:"Waar woont de koning van Nederland?", qt:"Where does the king of the Netherlands live?", a:"Amsterdam", at:"Amsterdam", b:"Den Haag", bt:"The Hague", correct:"b", note:"King Willem-Alexander lives at Huis ten Bosch palace in Den Haag." },
+  { id:14, theme:"Geografie", q:"Waar ligt de grootste zeehaven van Nederland?", qt:"Where is the Netherlands' largest seaport?", a:"Amsterdam", at:"Amsterdam", b:"Rotterdam", bt:"Rotterdam", correct:"b", note:"Rotterdam (Europoort) is one of the world's busiest ports." },
+  { id:15, theme:"Geografie", q:"Hoe heet de nationale luchthaven van Nederland?", qt:"What is the national airport of the Netherlands called?", a:"Schiphol", at:"Schiphol", b:"Eindhoven Airport", bt:"Eindhoven Airport", correct:"a", note:"Amsterdam Airport Schiphol is the main international airport." },
+  { id:16, theme:"Geografie", q:"Waar ligt Schiphol?", qt:"Where is Schiphol located?", a:"Bij Amsterdam", at:"Near Amsterdam", b:"Bij Rotterdam", bt:"Near Rotterdam", correct:"a", note:"Schiphol is just south-west of Amsterdam." },
+  { id:17, theme:"Geografie", q:"Is Nederland vaak droog of nat?", qt:"Is the Netherlands often dry or wet?", a:"Droog", at:"Dry", b:"Nat", bt:"Wet", correct:"b", note:"The Netherlands has a maritime climate with frequent rain throughout the year." },
+
+  // ── VERVOER ──
+  { id:18, theme:"Vervoer", q:"Als u naar Nederland komt, moet u dan opnieuw uw rijbewijs halen?", qt:"When you come to the Netherlands, do you have to redo your driving test?", a:"Ja", at:"Yes", b:"Nee", bt:"No", correct:"b", note:"You do not have to retake the driving test; you can exchange your foreign licence for a Dutch one." },
+  { id:19, theme:"Vervoer", q:"In Nederland, zijn de wegen daar druk of rustig?", qt:"Are the roads in the Netherlands busy or quiet?", a:"Druk", at:"Busy", b:"Rustig", bt:"Quiet", correct:"a", note:"The Netherlands is densely populated – roads and motorways are often busy." },
+  { id:20, theme:"Vervoer", q:"In Nederland, zijn daar veel fietsen of weinig fietsen?", qt:"Are there many or few bicycles in the Netherlands?", a:"Veel", at:"Many", b:"Weinig", bt:"Few", correct:"a", note:"The Netherlands has more bicycles than people!" },
+  { id:21, theme:"Vervoer", q:"Wat is typisch Nederlands in het verkeer?", qt:"What is typically Dutch in traffic?", a:"Boten", at:"Boats", b:"Fietsen", bt:"Bicycles", correct:"b", note:"Cycling is a defining feature of Dutch daily life and transport." },
+  { id:22, theme:"Wonen", q:"Leven Nederlanders veel binnen of buiten?", qt:"Do Dutch people live mostly indoors or outdoors?", a:"Binnen", at:"Indoors", b:"Buiten", bt:"Outdoors", correct:"b", note:"Dutch people cycle, walk and spend time outdoors a great deal." },
+
+  // ── GESCHIEDENIS ──
+  { id:23, theme:"Geschiedenis", q:"Wie ziet u op het plaatje? (man te paard, historisch portret)", qt:"Who do you see in the photo? (man on horse, historical portrait)", a:"Rembrandt van Rijn", at:"Rembrandt van Rijn", b:"Willem van Oranje", bt:"William of Orange", correct:"b", note:"Willem van Oranje led the revolt against Spanish rule in the 16th century." },
+  { id:24, theme:"Geschiedenis", q:"Was de koning van Spanje katholiek of protestants?", qt:"Was the king of Spain Catholic or Protestant?", a:"Katholiek", at:"Catholic", b:"Protestants", bt:"Protestant", correct:"a", note:"King Philip II of Spain was Catholic; the Dutch rebels were largely Protestant (Calvinist)." },
+  { id:25, theme:"Geschiedenis", q:"Hoe lang duurde de oorlog met Spanje?", qt:"How long did the war with Spain last?", a:"80 jaar", at:"80 years", b:"8 jaar", bt:"8 years", correct:"a", note:"The Eighty Years' War (Tachtigjarige Oorlog) lasted from 1568 to 1648." },
+  { id:26, theme:"Geschiedenis", q:"Hoe lang bestaat de Nederlandse staat ongeveer?", qt:"Approximately how long has the Dutch state existed?", a:"Vierhonderd jaar", at:"Four hundred years", b:"Vijftig jaar", bt:"Fifty years", correct:"a", note:"The Dutch Republic was founded around 1581 – about 400+ years ago." },
+  { id:27, theme:"Geschiedenis", q:"Waren de VOC-schepen voor de handel of voor de visvangst?", qt:"Were the VOC ships for trade or for fishing?", a:"Voor de handel", at:"For trade", b:"Voor de visvangst", bt:"For fishing", correct:"a", note:"The VOC (Dutch East India Company) was a powerful trading company in the 17th century." },
+  { id:28, theme:"Geschiedenis", q:"Wie schilderde dit schilderij? (de Nachtwacht)", qt:"Who painted this painting? (the Night Watch)", a:"Rembrandt van Rijn", at:"Rembrandt van Rijn", b:"Vincent van Gogh", bt:"Vincent van Gogh", correct:"a", note:"Rembrandt van Rijn painted De Nachtwacht in 1642 – it hangs in the Rijksmuseum." },
+  { id:29, theme:"Staatsinrichting", q:"Is er in Nederland scheiding van kerk en staat?", qt:"Is there a separation of church and state in the Netherlands?", a:"Ja", at:"Yes", b:"Nee", bt:"No", correct:"a", note:"The Netherlands has a strict separation: the government does not follow religious rules." },
+  { id:30, theme:"Geschiedenis", q:"Door welk land is Nederland bezet tijdens de Tweede Wereldoorlog?", qt:"By which country was the Netherlands occupied during World War II?", a:"Duitsland", at:"Germany", b:"Engeland", bt:"England", correct:"a", note:"Nazi Germany occupied the Netherlands from 1940 to 1945." },
+  { id:31, theme:"Geschiedenis", q:"Welke grote Nederlandse stad is in 1940 gebombardeerd?", qt:"Which major Dutch city was bombed in 1940?", a:"Amsterdam", at:"Amsterdam", b:"Rotterdam", bt:"Rotterdam", correct:"b", note:"Rotterdam was devastated by German bombing on 14 May 1940." },
+  { id:32, theme:"Geschiedenis", q:"Waarom is Anne Frank beroemd?", qt:"Why is Anne Frank famous?", a:"Ze schreef een dagboek", at:"She wrote a diary", b:"Ze was baas van een museum", bt:"She was head of a museum", correct:"a", note:"Anne Frank wrote her famous diary while hiding from the Nazis in Amsterdam." },
+  { id:33, theme:"Geschiedenis", q:"Welke kolonie van Nederland werd onafhankelijk vlak na de Tweede Wereldoorlog?", qt:"Which Dutch colony became independent shortly after World War II?", a:"Nederlandse Antillen", at:"Netherlands Antilles", b:"Indonesië", bt:"Indonesia", correct:"b", note:"Indonesia declared independence in 1945 and it was recognised by the Netherlands in 1949." },
+  { id:34, theme:"Geschiedenis", q:"Uit welk land kwamen veel gastarbeiders naar Nederland?", qt:"From which country did many guest workers come to the Netherlands?", a:"Uit Engeland", at:"From England", b:"Uit Turkije", bt:"From Turkey", correct:"b", note:"In the 1960s–70s, many guest workers (gastarbeiders) came from Turkey and Morocco." },
+  { id:35, theme:"Geschiedenis", q:"Welke kolonie van Nederland werd in 1975 onafhankelijk?", qt:"Which Dutch colony became independent in 1975?", a:"Nederlandse Antillen", at:"Netherlands Antilles", b:"Suriname", bt:"Suriname", correct:"b", note:"Suriname became independent on 25 November 1975." },
+
+  // ── STAATSINRICHTING ──
+  { id:36, theme:"Staatsinrichting", q:"Wie zijn dit? (foto van het koninklijk paar)", qt:"Who are these? (photo of the royal couple)", a:"Koning Willem-Alexander en koningin Maxima", at:"King Willem-Alexander and Queen Máxima", b:"Prinses Beatrix en haar man Claus", bt:"Princess Beatrix and her husband Claus", correct:"a", note:"Willem-Alexander became king in 2013; Máxima is from Argentina." },
+  { id:37, theme:"Staatsinrichting", q:"Uit welk land komt koningin Maxima?", qt:"From which country does Queen Máxima come?", a:"Argentinië", at:"Argentina", b:"Duitsland", bt:"Germany", correct:"a", note:"Máxima Zorreguieta was born in Buenos Aires, Argentina." },
+  { id:38, theme:"Staatsinrichting", q:"Hoe heet de kroonprinses van Nederland?", qt:"What is the name of the Dutch crown princess?", a:"Amalia", at:"Amalia", b:"Beatrix", bt:"Beatrix", correct:"a", note:"Princess Amalia (born 2003) is the heir to the throne." },
+  { id:39, theme:"Staatsinrichting", q:"Is Nederland een democratie?", qt:"Is the Netherlands a democracy?", a:"Ja", at:"Yes", b:"Nee", bt:"No", correct:"a", note:"The Netherlands is a constitutional monarchy and parliamentary democracy." },
+  { id:40, theme:"Staatsinrichting", q:"Wat is de belangrijkste wet in Nederland?", qt:"What is the most important law in the Netherlands?", a:"De grondwet", at:"The constitution", b:"De tweede kamer", bt:"The parliament", correct:"a", note:"The Grondwet (constitution) is the highest law – it protects fundamental rights." },
+  { id:41, theme:"Staatsinrichting", q:"In welke stad zit het parlement van Nederland?", qt:"In which city is the Dutch parliament located?", a:"Amsterdam", at:"Amsterdam", b:"Den Haag", bt:"The Hague", correct:"b", note:"The Tweede Kamer (parliament) meets in Den Haag." },
+  { id:42, theme:"Staatsinrichting", q:"Wie vergaderen in de vergaderzaal van het parlement?", qt:"Who meets in the parliamentary chamber?", a:"De Eerste Kamer", at:"The Senate (Eerste Kamer)", b:"De Tweede Kamer", bt:"The House of Representatives (Tweede Kamer)", correct:"b", note:"The Tweede Kamer (150 seats) is the main legislative chamber." },
+  { id:43, theme:"Staatsinrichting", q:"Wat is de functie van de leider van de regering?", qt:"What is the function of the leader of the government?", a:"De minister-president", at:"The prime minister", b:"De burgemeester", bt:"The mayor", correct:"a", note:"The minister-president (prime minister) leads the cabinet." },
+  { id:44, theme:"Staatsinrichting", q:"Wie is de voorzitter van de raad van ministers?", qt:"Who chairs the council of ministers?", a:"De minister-president", at:"The prime minister", b:"De koning", bt:"The king", correct:"a", note:"The prime minister chairs the weekly cabinet meeting." },
+  { id:45, theme:"Staatsinrichting", q:"Hoe vaak zijn er verkiezingen in Nederland?", qt:"How often are there elections in the Netherlands?", a:"Elke vier jaar", at:"Every four years", b:"Elke zes jaar", bt:"Every six years", correct:"a", note:"Parliamentary elections are held every four years (or earlier if the government falls)." },
+  { id:46, theme:"Staatsinrichting", q:"Hoe oud moet u zijn om te mogen stemmen in Nederland?", qt:"How old do you have to be to vote in the Netherlands?", a:"18 jaar", at:"18 years old", b:"21 jaar", bt:"21 years old", correct:"a", note:"Dutch citizens may vote from age 18 in national and local elections." },
+  { id:47, theme:"Staatsinrichting", q:"Heeft Nederland één politieke partij of meer politieke partijen?", qt:"Does the Netherlands have one political party or more?", a:"Meer politieke partijen", at:"More political parties", b:"Één politieke partij", bt:"One political party", correct:"a", note:"The Netherlands has a multi-party system – typically 10–20 parties in parliament." },
+
+  // ── RECHTEN & VRIJHEDEN ──
+  { id:48, theme:"Rechten", q:"Is discriminatie toegestaan in Nederland?", qt:"Is discrimination allowed in the Netherlands?", a:"Ja", at:"Yes", b:"Nee", bt:"No", correct:"b", note:"Discrimination is prohibited by Article 1 of the Dutch Constitution." },
+  { id:49, theme:"Rechten", q:"Hebben vrouwen in Nederland méér rechten dan mannen of dezelfde rechten?", qt:"Do women in the Netherlands have more rights than men or the same rights?", a:"Meer rechten dan mannen", at:"More rights than men", b:"Dezelfde rechten als mannen", bt:"The same rights as men", correct:"b", note:"Men and women have equal rights under Dutch law." },
+  { id:50, theme:"Rechten", q:"Mogen vrouwen in Nederland zelf kiezen met wie ze willen trouwen?", qt:"May women in the Netherlands choose freely who they marry?", a:"Ja", at:"Yes", b:"Nee", bt:"No", correct:"a", note:"Freedom of marriage is a fundamental right. Forced marriage is a criminal offence." },
+  { id:51, theme:"Rechten", q:"Is het discrimineren van homoseksuelen strafbaar of toegestaan in Nederland?", qt:"Is discrimination against gay people criminal or permitted in the Netherlands?", a:"Strafbaar", at:"Criminal (illegal)", b:"Toegestaan", bt:"Permitted (legal)", correct:"a", note:"Discrimination based on sexual orientation is prohibited by law." },
+  { id:52, theme:"Rechten", q:"Heeft Nederland één staatsgodsdienst of zijn er veel godsdiensten?", qt:"Does the Netherlands have one state religion or many religions?", a:"Er is één staatsgodsdienst", at:"There is one state religion", b:"Er zijn veel godsdiensten", bt:"There are many religions", correct:"b", note:"The Netherlands is secular – all religions are free and none is official." },
+  { id:53, theme:"Rechten", q:"Zijn de kranten, radio en televisie vrij in hun mening in Nederland?", qt:"Are newspapers, radio and TV free to express their opinion in the Netherlands?", a:"Ja", at:"Yes", b:"Nee", bt:"No", correct:"a", note:"Freedom of the press is guaranteed by the Dutch Constitution." },
+  { id:54, theme:"Rechten", q:"Heeft Nederland veel televisiekanalen of is er één staatstelevisie?", qt:"Does the Netherlands have many TV channels or just one state channel?", a:"Er is één staatstelevisie", at:"There is one state TV channel", b:"Er zijn veel televisiekanalen", bt:"There are many TV channels", correct:"b", note:"The Netherlands has many public and commercial TV channels." },
+  { id:55, theme:"Rechten", q:"Is homoseksualiteit toegestaan of strafbaar in Nederland?", qt:"Is homosexuality permitted or criminal in the Netherlands?", a:"Strafbaar", at:"Criminal", b:"Toegestaan", bt:"Permitted (legal)", correct:"b", note:"Homosexuality is legal; the Netherlands was the first country to allow same-sex marriage (2001)." },
+  { id:56, theme:"Rechten", q:"Is wapenbezit zonder vergunning toegestaan of strafbaar in Nederland?", qt:"Is possessing a weapon without a permit permitted or criminal in the Netherlands?", a:"Strafbaar", at:"Criminal (illegal)", b:"Toegestaan", bt:"Permitted", correct:"a", note:"Owning a firearm without a permit is a criminal offence in the Netherlands." },
+  { id:57, theme:"Rechten", q:"Is vrouwenbesnijdenis toegestaan of strafbaar in Nederland?", qt:"Is female genital mutilation permitted or criminal in the Netherlands?", a:"Strafbaar", at:"Criminal (illegal)", b:"Toegestaan", bt:"Permitted", correct:"a", note:"Female genital mutilation (FGM) is a serious criminal offence in the Netherlands." },
+  { id:58, theme:"Rechten", q:"Is het slaan van vrouwen toegestaan of strafbaar in Nederland?", qt:"Is hitting women permitted or criminal in the Netherlands?", a:"Strafbaar", at:"Criminal (illegal)", b:"Toegestaan", bt:"Permitted", correct:"a", note:"Domestic violence is a criminal offence. Violence against any person is illegal." },
+
+  // ── NEDERLANDSE TAAL ──
+  { id:59, theme:"Nederlandse taal", q:"Hebben alle mensen in Nederland hetzelfde geloof?", qt:"Do all people in the Netherlands have the same religion?", a:"Ja", at:"Yes", b:"Nee", bt:"No", correct:"b", note:"The Netherlands is diverse – people have many different beliefs, or none at all." },
+  { id:60, theme:"Nederlandse taal", q:"Welke taal spreken de mensen in Nederland?", qt:"What language do people speak in the Netherlands?", a:"Duits", at:"German", b:"Nederlands", bt:"Dutch", correct:"b", note:"Dutch (Nederlands) is the official national language." },
+  { id:61, theme:"Nederlandse taal", q:"Is het belangrijk om snel Nederlands te leren?", qt:"Is it important to learn Dutch quickly?", a:"Ja", at:"Yes", b:"Nee", bt:"No", correct:"a", note:"Learning Dutch quickly helps with work, school, neighbours and daily life." },
+  { id:62, theme:"Nederlandse taal", q:"Wat leert u in de Nederlandse taalles?", qt:"What do you learn in a Dutch language class?", a:"Alle Europese talen", at:"All European languages", b:"De Nederlandse taal", bt:"The Dutch language", correct:"b", note:"Language classes focus on speaking, reading and writing Dutch." },
+  { id:63, theme:"Nederlandse taal", q:"Moet u betalen voor een Nederlandse taalcursus?", qt:"Do you have to pay for a Dutch language course?", a:"Ja", at:"Yes", b:"Nee", bt:"No", correct:"a", note:"You pay for the inburgering course yourself, though loans and subsidies may be available." },
+  { id:64, theme:"Nederlandse taal", q:"Wie betaalt de taalcursus?", qt:"Who pays for the language course?", a:"De school betaalt", at:"The school pays", b:"Ik betaal zelf", bt:"I pay myself", correct:"b", note:"The inburgeraar (newcomer) is responsible for their own course costs." },
+  { id:65, theme:"Nederlandse taal", q:"Gaan in Nederland alleen kinderen naar school of ook volwassenen?", qt:"In the Netherlands, do only children go to school or adults too?", a:"Alleen kinderen", at:"Only children", b:"Kinderen en volwassenen", bt:"Children and adults", correct:"b", note:"Adults can follow language courses, vocational training and university education." },
+
+  // ── OPVOEDING & ONDERWIJS ──
+  { id:66, theme:"Onderwijs", q:"Is het voor het leren van de taal goed om samen met kinderen naar de Nederlandse televisie te kijken?", qt:"Is it good for learning the language to watch Dutch TV together with children?", a:"Ja", at:"Yes", b:"Nee", bt:"No", correct:"a", note:"Watching Dutch TV regularly exposes you to natural speech and vocabulary." },
+  { id:67, theme:"Onderwijs", q:"Wie is in Nederland verantwoordelijk voor wat kinderen doen?", qt:"Who is responsible for children's behaviour in the Netherlands?", a:"De school", at:"The school", b:"De ouders", bt:"The parents", correct:"b", note:"Parents are primarily responsible for their children's upbringing and behaviour." },
+  { id:68, theme:"Cultuur", q:"Opa's en oma's in Nederland, wonen die bij hun kinderen of wonen ze apart?", qt:"Do grandparents in the Netherlands live with their children or separately?", a:"Ze wonen bij hun kinderen", at:"They live with their children", b:"Ze wonen apart", bt:"They live separately", correct:"b", note:"In Dutch culture it is normal for grandparents to live independently." },
+  { id:69, theme:"Cultuur", q:"Worden verjaardagen in Nederland gevierd?", qt:"Are birthdays celebrated in the Netherlands?", a:"Ja", at:"Yes", b:"Nee", bt:"No", correct:"a", note:"Birthdays are very important in Dutch culture – even work colleagues and neighbours are visited." },
+  { id:70, theme:"Cultuur", q:"Wat doen Nederlanders meestal als ze bij iemand op bezoek gaan?", qt:"What do Dutch people usually do when they visit someone?", a:"Ze gaan zomaar naar binnen", at:"They just walk in", b:"Ze maken meestal een afspraak", bt:"They usually make an appointment", correct:"b", note:"In Dutch culture it is normal to make an appointment (afspraak) before visiting." },
+  { id:71, theme:"Onderwijs", q:"Hoe oud zijn de meeste kinderen in Nederland als ze naar school gaan?", qt:"How old are most children in the Netherlands when they start school?", a:"Vier jaar", at:"Four years old", b:"Vijf jaar", bt:"Five years old", correct:"a", note:"Children may start primary school from age 4 in the Netherlands." },
+  { id:72, theme:"Onderwijs", q:"Vanaf welke leeftijd is onderwijs verplicht in Nederland?", qt:"From what age is education compulsory in the Netherlands?", a:"Vier jaar", at:"Four years old", b:"Vijf jaar", bt:"Five years old", correct:"b", note:"Education is compulsory (leerplicht) from age 5, though children can start at 4." },
+  { id:73, theme:"Onderwijs", q:"Tot welke leeftijd is onderwijs verplicht in Nederland?", qt:"Until what age is education compulsory in the Netherlands?", a:"Twaalf jaar", at:"Twelve years old", b:"Achttien jaar", bt:"Eighteen years old", correct:"b", note:"Full-time compulsory education continues until age 16, with qualified obligation until 18." },
+  { id:74, theme:"Onderwijs", q:"Leren kinderen als ze spelen?", qt:"Do children learn while they play?", a:"Alleen spelen, niet leren", at:"Only play, not learn", b:"Spelen en leren tegelijk", bt:"Play and learn at the same time", correct:"b", note:"Play is a key part of early learning in Dutch schools." },
+  { id:75, theme:"Onderwijs", q:"Wie kiest in Nederland de school voor het kind?", qt:"Who chooses the school for the child in the Netherlands?", a:"De gemeente", at:"The municipality", b:"De ouders", bt:"The parents", correct:"b", note:"Parents have freedom of education (vrijheid van onderwijs) to choose any school." },
+  { id:76, theme:"Onderwijs", q:"Zijn er in Nederland op school aparte klassen voor jongens en voor meisjes?", qt:"Are there separate classes for boys and girls in Dutch schools?", a:"Ja", at:"Yes", b:"Nee", bt:"No", correct:"b", note:"Dutch schools are mixed – boys and girls learn together." },
+  { id:77, theme:"Onderwijs", q:"Dragen kinderen in Nederland op school een uniform?", qt:"Do children in the Netherlands wear a school uniform?", a:"Ja", at:"Yes", b:"Nee", bt:"No", correct:"b", note:"School uniforms are not part of Dutch culture – children wear their own clothes." },
+  { id:78, theme:"Onderwijs", q:"Wat kan een kind doen met een computer op school?", qt:"What can a child do with a computer at school?", a:"Alleen spelen", at:"Only play", b:"Spelen en leren", bt:"Play and learn", correct:"b", note:"Computers at school are used for learning as well as educational games." },
+  { id:79, theme:"Onderwijs", q:"Voortgezet onderwijs, is dat voor kinderen vanaf vier jaar of vanaf twaalf jaar?", qt:"Secondary education – is it for children from age four or from age twelve?", a:"Vanaf vier jaar", at:"From age four", b:"Vanaf twaalf jaar", bt:"From age twelve", correct:"b", note:"Primary school runs to age 12; secondary school (voortgezet onderwijs) starts at 12." },
+  { id:80, theme:"Onderwijs", q:"Gaan alle kinderen vanaf twaalf jaar naar hetzelfde soort onderwijs?", qt:"Do all children from age twelve go to the same type of secondary school?", a:"Ja, er is één soort", at:"Yes, there is one type", b:"Nee, er zijn twee richtingen", bt:"No, there are two tracks", correct:"b", note:"There are different levels: VMBO (vocational), HAVO (general) and VWO (pre-university)." },
+  { id:81, theme:"Onderwijs", q:"Tot welke leeftijd moeten kinderen in Nederland naar school?", qt:"Until what age must children attend school in the Netherlands?", a:"Zestien jaar", at:"Sixteen years old", b:"Achttien jaar", bt:"Eighteen years old", correct:"b", note:"The qualified compulsory education obligation runs until age 18 (or a qualification is obtained)." },
+  { id:82, theme:"Onderwijs", q:"Vanaf welke leeftijd mogen jongeren in Nederland hun eigen keuzes maken?", qt:"From what age may young people in the Netherlands make their own choices?", a:"Zestien jaar", at:"Sixteen years old", b:"Achttien jaar", bt:"Eighteen years old", correct:"b", note:"The age of majority in the Netherlands is 18 – full legal adulthood." },
+
+  // ── GEZONDHEIDSZORG ──
+  { id:83, theme:"Gezondheidszorg", q:"Is het verplicht om uzelf te verzekeren tegen ziektekosten in Nederland?", qt:"Is it compulsory to have health insurance in the Netherlands?", a:"Ja", at:"Yes", b:"Nee", bt:"No", correct:"a", note:"Every person in the Netherlands must have a basisverzekering (basic health insurance)." },
+  { id:84, theme:"Gezondheidszorg", q:"Wie helpt u als u in Nederland aankomt?", qt:"Who helps you when you arrive in the Netherlands?", a:"De gemeente", at:"The municipality", b:"Mijn partner", bt:"My partner", correct:"b", note:"Your Dutch partner who invited you is responsible for helping you settle in." },
+  { id:85, theme:"Gezondheidszorg", q:"Waar werken de meeste specialisten (dokters)?", qt:"Where do most specialists (doctors) work?", a:"Bij de huisarts", at:"At the GP's practice", b:"In het ziekenhuis", bt:"In the hospital", correct:"b", note:"Medical specialists work in hospitals; GPs work in local practices." },
+  { id:86, theme:"Gezondheidszorg", q:"Voor wie is het consultatiebureau?", qt:"Who is the consultatiebureau (child health clinic) for?", a:"Voor grote kinderen", at:"For older children", b:"Voor kleine kinderen", bt:"For young children", correct:"b", note:"The consultatiebureau monitors babies and toddlers' health and development." },
+  { id:87, theme:"Gezondheidszorg", q:"Als u ziek wordt, waar kunt u in Nederland dan het beste eerst naartoe gaan?", qt:"If you become ill, where should you go first in the Netherlands?", a:"Naar de huisarts", at:"To the GP (general practitioner)", b:"Naar het ziekenhuis", bt:"To the hospital", correct:"a", note:"In the Netherlands you always go to the huisarts (GP) first; they refer you to specialists if needed." },
+  { id:88, theme:"Gezondheidszorg", q:"Waar haalt men in Nederland medicijnen op recept?", qt:"Where do you collect prescription medicines in the Netherlands?", a:"Bij de apotheek", at:"At the pharmacy (apotheek)", b:"Bij de drogist", bt:"At the drugstore (drogist)", correct:"a", note:"Prescription medicines must be collected from a licensed apotheek (pharmacy)." },
+  { id:89, theme:"Gezondheidszorg", q:"Waar gaat u in Nederland naartoe in een noodgeval?", qt:"Where do you go in the Netherlands in an emergency?", a:"Naar de drogist", at:"To the drugstore", b:"Naar het ziekenhuis", bt:"To the hospital", correct:"b", note:"In a medical emergency go to the hospital (Spoedeisende Hulp / SEH) or call 112." },
+
+  // ── WERK & INKOMEN ──
+  { id:90, theme:"Werk en inkomen", q:"Is het leven in Nederland duur of goedkoop?", qt:"Is life in the Netherlands expensive or cheap?", a:"Goedkoop", at:"Cheap", b:"Duur", bt:"Expensive", correct:"b", note:"The Netherlands has a high cost of living – housing, food and taxes are significant expenses." },
+  { id:91, theme:"Werk en inkomen", q:"Krijgt u in Nederland een uitkering of moet uw partner voor u zorgen?", qt:"Do you receive a benefit payment in the Netherlands, or must your partner support you?", a:"Ik krijg een uitkering", at:"I receive a benefit", b:"Mijn partner moet voor mij zorgen", bt:"My partner must support me", correct:"b", note:"When you arrive on a family reunification visa, your Dutch partner is your financial sponsor." },
+  { id:92, theme:"Werk en inkomen", q:"Waar is in Nederland steeds minder werk te vinden?", qt:"In which sector is there increasingly less work in the Netherlands?", a:"In de landbouw", at:"In agriculture", b:"In de beveiliging", bt:"In security", correct:"a", note:"Agriculture is increasingly automated – fewer workers are needed on farms." },
+  { id:93, theme:"Werk en inkomen", q:"Waar is in Nederland veel werk te vinden?", qt:"In which sector is there a lot of work in the Netherlands?", a:"In de industrie", at:"In industry", b:"In de zorg", bt:"In healthcare", correct:"b", note:"The healthcare sector (zorg) has a large and growing demand for workers." },
+  { id:94, theme:"Werk en inkomen", q:"Waar is het in Nederland gemakkelijker om werk te vinden?", qt:"Where is it easier to find work in the Netherlands?", a:"Bij een school", at:"At a school", b:"Bij een uitzendbureau", bt:"At a temp agency", correct:"b", note:"A uitzendbureau (temp agency) helps people find employment quickly." },
+  { id:95, theme:"Werk en inkomen", q:"Hoe vindt u in Nederland gemakkelijker werk – via de krant of via familie?", qt:"How do you find work more easily in the Netherlands – through the newspaper or through family?", a:"Via de krant", at:"Through the newspaper (formal job ads)", b:"Via familie", bt:"Through family", correct:"a", note:"In Dutch culture, formal channels (ads, agencies, internet) are the expected way to find jobs." },
+  { id:96, theme:"Werk en inkomen", q:"Waar kunt u zich in Nederland inschrijven als u werk zoekt?", qt:"Where can you register in the Netherlands when you are looking for work?", a:"Bij een uitzendbureau", at:"At a temp agency", b:"Bij een school", bt:"At a school", correct:"a", note:"Registering at a uitzendbureau or UWV (employment office) gives access to job vacancies." },
+  { id:97, theme:"Werk en inkomen", q:"Geeft men elkaar in Nederland bij een sollicitatiegesprek eerst een hand?", qt:"Do people shake hands at the start of a job interview in the Netherlands?", a:"Ja, men geeft elkaar eerst een hand", at:"Yes, you shake hands first", b:"Nee, men gaat direct zitten", bt:"No, you sit down straight away", correct:"a", note:"A firm handshake is the standard greeting at the start of a job interview in the Netherlands." },
+  { id:98, theme:"Werk en inkomen", q:"Wie werken er in Nederland?", qt:"Who works in the Netherlands?", a:"Alleen mannen", at:"Only men", b:"Mannen en vrouwen", bt:"Men and women", correct:"b", note:"Both men and women work in the Netherlands. Women's employment rate is among Europe's highest." },
+  { id:99, theme:"Werk en inkomen", q:"Wanneer moet u werk gaan zoeken als u in Nederland bent?", qt:"When should you start looking for work when you are in the Netherlands?", a:"Zo snel mogelijk", at:"As soon as possible", b:"Later, na een jaar", bt:"Later, after a year", correct:"a", note:"You should look for work as soon as possible – employment is important for integration." },
+  { id:100, theme:"Werk en inkomen", q:"Hoe oud moet u zijn om in Nederland te mogen werken?", qt:"How old do you have to be to work in the Netherlands?", a:"Zestien jaar", at:"Sixteen years old", b:"Achttien jaar", bt:"Eighteen years old", correct:"a", note:"Young people may work from age 16; certain jobs require you to be 18." },
+];
+
+// ═══════════════════════════════════════
+//  DATA — READING EXERCISES (20 questions)
+// ═══════════════════════════════════════
+const readingExercises = [
+  {
+    context: "📋 Sign at a pharmacy",
+    text: "APOTHEEK\nMaandag t/m vrijdag: 08:00 – 18:00\nZaterdag: 09:00 – 13:00\nZondag: GESLOTEN\nSpoedeisend: bel 112",
+    question: "Wanneer is de apotheek gesloten?",
+    questionEn: "When is the pharmacy closed?",
+    options: ["Op zondag", "Op zaterdag", "Op maandag"],
+    correct: 0, explanation: "'Gesloten' means closed. The sign says Zondag: GESLOTEN."
+  },
+  {
+    context: "📋 Sign at a pharmacy",
+    text: "APOTHEEK\nMaandag t/m vrijdag: 08:00 – 18:00\nZaterdag: 09:00 – 13:00\nZondag: GESLOTEN\nSpoedeisend: bel 112",
+    question: "Hoe laat sluit de apotheek op zaterdag?",
+    questionEn: "What time does the pharmacy close on Saturday?",
+    options: ["Om 09:00", "Om 13:00", "Om 18:00"],
+    correct: 1, explanation: "Saturday opening hours are 09:00–13:00, so it closes at 13:00."
+  },
+  {
+    context: "📱 Text message",
+    text: "Hoi Temwa!\nIk ben morgen om 15:00 bij jou thuis.\nKan jij koffie zetten?\nTot morgen! – Maria",
+    question: "Hoe laat komt Maria?",
+    questionEn: "What time is Maria coming?",
+    options: ["Om 13:00", "Om 15:00", "Om 17:00"],
+    correct: 1, explanation: "Maria writes 'om 15:00' – at 3 o'clock in the afternoon."
+  },
+  {
+    context: "📱 Text message",
+    text: "Hoi Temwa!\nIk ben morgen om 15:00 bij jou thuis.\nKan jij koffie zetten?\nTot morgen! – Maria",
+    question: "Wat vraagt Maria aan Temwa?",
+    questionEn: "What does Maria ask Temwa?",
+    options: ["Een afspraak maken", "Koffie zetten", "Naar haar huis komen"],
+    correct: 1, explanation: "'Kan jij koffie zetten?' means 'Can you make coffee?'"
+  },
+  {
+    context: "🚌 Bus notice",
+    text: "LET OP!\nBus 15 rijdt NIET op 27 april (Koningsdag).\nGebruik bus 14 of de metro.\nVoor meer informatie: www.gvb.nl",
+    question: "Welke bus rijdt niet op 27 april?",
+    questionEn: "Which bus does not run on 27 April?",
+    options: ["Bus 12", "Bus 14", "Bus 15"],
+    correct: 2, explanation: "The notice says 'Bus 15 rijdt NIET op 27 april.'"
+  },
+  {
+    context: "🚌 Bus notice",
+    text: "LET OP!\nBus 15 rijdt NIET op 27 april (Koningsdag).\nGebruik bus 14 of de metro.\nVoor meer informatie: www.gvb.nl",
+    question: "Waarom rijdt bus 15 niet op 27 april?",
+    questionEn: "Why does bus 15 not run on 27 April?",
+    options: ["Er is een staking", "Het is Koningsdag", "De bus is kapot"],
+    correct: 1, explanation: "27 april is Koningsdag (King's Day) – a national holiday."
+  },
+  {
+    context: "📋 Doctor's appointment card",
+    text: "Geachte mevrouw,\nU heeft een afspraak bij de huisarts\nop dinsdag 5 mei om 10:30 uur.\nBel 020-123 4567 als u niet kunt komen.\nDoktersPraktijk De Linden",
+    question: "Wanneer is de afspraak bij de huisarts?",
+    questionEn: "When is the appointment at the GP?",
+    options: ["Maandag 5 mei om 10:30", "Dinsdag 5 mei om 10:30", "Woensdag 5 mei om 10:30"],
+    correct: 1, explanation: "The card says 'dinsdag 5 mei om 10:30 uur.'"
+  },
+  {
+    context: "📋 Doctor's appointment card",
+    text: "Geachte mevrouw,\nU heeft een afspraak bij de huisarts\nop dinsdag 5 mei om 10:30 uur.\nBel 020-123 4567 als u niet kunt komen.\nDoktersPraktijk De Linden",
+    question: "Wat moet u doen als u niet kunt komen?",
+    questionEn: "What should you do if you cannot come?",
+    options: ["Een e-mail sturen", "Gewoon wegblijven", "Bellen"],
+    correct: 2, explanation: "'Bel 020-123 4567 als u niet kunt komen' – call if you cannot attend."
+  },
+  {
+    context: "💊 Medicine label",
+    text: "Paracetamol 500 mg\nGebruik: neem 1 tablet bij pijn of koorts.\nMaximaal: 4 tabletten per dag.\nBewaar op kamertemperatuur.\nBuiten bereik van kinderen houden.",
+    question: "Hoeveel tabletten paracetamol mag u per dag nemen?",
+    questionEn: "How many paracetamol tablets may you take per day?",
+    options: ["2 tabletten", "4 tabletten", "6 tabletten"],
+    correct: 1, explanation: "The label says 'Maximaal: 4 tabletten per dag.'"
+  },
+  {
+    context: "💊 Medicine label",
+    text: "Paracetamol 500 mg\nGebruik: neem 1 tablet bij pijn of koorts.\nMaximaal: 4 tabletten per dag.\nBewaar op kamertemperatuur.\nBuiten bereik van kinderen houden.",
+    question: "Wanneer neemt u paracetamol?",
+    questionEn: "When do you take paracetamol?",
+    options: ["Elke dag voor het slapen", "Bij pijn of koorts", "Met het ontbijt"],
+    correct: 1, explanation: "'Neem 1 tablet bij pijn of koorts' – take it for pain or fever."
+  },
+  {
+    context: "🏫 School note",
+    text: "Beste ouders en verzorgers,\nWoensdag 8 mei zijn de kinderen\nom 12:00 uur vrij.\nEr is een studiedag voor de leraren.\nMet vriendelijke groet,\nDirectie OBS De Regenboog",
+    question: "Wanneer zijn de kinderen vroeg vrij?",
+    questionEn: "When do the children finish early?",
+    options: ["Dinsdag 8 mei om 12:00", "Woensdag 8 mei om 12:00", "Woensdag 8 mei om 14:00"],
+    correct: 1, explanation: "The note says 'Woensdag 8 mei om 12:00 uur vrij.'"
+  },
+  {
+    context: "🏫 School note",
+    text: "Beste ouders en verzorgers,\nWoensdag 8 mei zijn de kinderen\nom 12:00 uur vrij.\nEr is een studiedag voor de leraren.\nMet vriendelijke groet,\nDirectie OBS De Regenboog",
+    question: "Waarom zijn de kinderen om 12:00 uur vrij?",
+    questionEn: "Why are the children free at 12:00?",
+    options: ["Er is een feestdag", "Er is een studiedag voor de leraren", "De school is dicht"],
+    correct: 1, explanation: "'Er is een studiedag voor de leraren' – teacher training day."
+  },
+  {
+    context: "🛒 Supermarket offer",
+    text: "AANBIEDING!\nMelk (1 liter): € 0,89\nSinaasappelsap (1 liter): € 1,29\nGeldig van maandag t/m woensdag.\nAlléén bij Albert Heijn.",
+    question: "Hoeveel kost een liter melk?",
+    questionEn: "How much does one litre of milk cost?",
+    options: ["€ 0,79", "€ 0,89", "€ 1,29"],
+    correct: 1, explanation: "The offer shows 'Melk (1 liter): € 0,89.'"
+  },
+  {
+    context: "🛒 Supermarket offer",
+    text: "AANBIEDING!\nMelk (1 liter): € 0,89\nSinaasappelsap (1 liter): € 1,29\nGeldig van maandag t/m woensdag.\nAlléén bij Albert Heijn.",
+    question: "Tot wanneer geldt de aanbieding?",
+    questionEn: "Until when is the offer valid?",
+    options: ["Tot maandag", "Tot woensdag", "Tot vrijdag"],
+    correct: 1, explanation: "'Geldig van maandag t/m woensdag' – valid Monday through Wednesday."
+  },
+  {
+    context: "📋 Gemeentehuis notice",
+    text: "BEKENDMAKING\nHet gemeentehuis is gesloten\nop dinsdag 13 mei.\nU kunt uw paspoort ophalen\nop woensdag 14 mei vanaf 09:00.\nVoor vragen: bel 14020.",
+    question: "Wanneer kunt u uw paspoort ophalen?",
+    questionEn: "When can you collect your passport?",
+    options: ["Dinsdag 13 mei", "Woensdag 14 mei", "Vrijdag 16 mei"],
+    correct: 1, explanation: "'U kunt uw paspoort ophalen op woensdag 14 mei.'"
+  },
+  {
+    context: "📋 Gemeentehuis notice",
+    text: "BEKENDMAKING\nHet gemeentehuis is gesloten\nop dinsdag 13 mei.\nU kunt uw paspoort ophalen\nop woensdag 14 mei vanaf 09:00.\nVoor vragen: bel 14020.",
+    question: "Wanneer is het gemeentehuis gesloten?",
+    questionEn: "When is the municipal hall closed?",
+    options: ["Op maandag 12 mei", "Op dinsdag 13 mei", "Op woensdag 14 mei"],
+    correct: 1, explanation: "'Het gemeentehuis is gesloten op dinsdag 13 mei.'"
+  },
+  {
+    context: "💼 Job advertisement",
+    text: "VACATURE: Schoonmaker/Schoonmaakster\nWerkuren: 08:00 – 12:00\nDagen: maandag t/m vrijdag\nLocatie: Amsterdam Centrum\nBel voor meer info: 06-9876 5432",
+    question: "Hoeveel uur per dag is de schoonmaakbaan?",
+    questionEn: "How many hours per day is the cleaning job?",
+    options: ["2 uur", "4 uur", "8 uur"],
+    correct: 1, explanation: "From 08:00 to 12:00 is 4 hours per day."
+  },
+  {
+    context: "💼 Job advertisement",
+    text: "VACATURE: Schoonmaker/Schoonmaakster\nWerkuren: 08:00 – 12:00\nDagen: maandag t/m vrijdag\nLocatie: Amsterdam Centrum\nBel voor meer info: 06-9876 5432",
+    question: "Op welke dagen is het werk?",
+    questionEn: "On which days is the work?",
+    options: ["Alleen in het weekend", "Maandag t/m vrijdag", "Dinsdag en donderdag"],
+    correct: 1, explanation: "'Maandag t/m vrijdag' means Monday through Friday."
+  },
+  {
+    context: "📚 Library notice",
+    text: "Bibliotheekpas verlengd!\nUw pas is geldig tot en met\n31 december 2026.\nMaximaal 5 boeken tegelijk.\nBoeken zijn 3 weken uit te lenen.\nTe laat? € 0,10 per dag per boek.",
+    question: "Hoeveel boeken mag u tegelijk lenen?",
+    questionEn: "How many books may you borrow at once?",
+    options: ["3 boeken", "5 boeken", "10 boeken"],
+    correct: 1, explanation: "'Maximaal 5 boeken tegelijk' – maximum 5 books at a time."
+  },
+  {
+    context: "📚 Library notice",
+    text: "Bibliotheekpas verlengd!\nUw pas is geldig tot en met\n31 december 2026.\nMaximaal 5 boeken tegelijk.\nBoeken zijn 3 weken uit te lenen.\nTe laat? € 0,10 per dag per boek.",
+    question: "Hoeveel dagen mag u een boek lenen?",
+    questionEn: "How many days may you borrow a book?",
+    options: ["1 week (7 dagen)", "2 weken (14 dagen)", "3 weken (21 dagen)"],
+    correct: 2, explanation: "'Boeken zijn 3 weken uit te lenen' – books are borrowed for 3 weeks."
+  }
+];
+
+// ═══════════════════════════════════════
+//  DATA — SPEAKING PHRASES
+// ═══════════════════════════════════════
+const phraseCategories = [
+  {
+    icon: "👋", title: "Greetings & Basics",
+    phrases: [
+      { nl: "Goedemorgen", en: "Good morning" },
+      { nl: "Goedemiddag", en: "Good afternoon" },
+      { nl: "Goedenavond", en: "Good evening" },
+      { nl: "Hoe gaat het met u?", en: "How are you? (formal)" },
+      { nl: "Goed, dank u. En u?", en: "Fine, thank you. And you?" },
+      { nl: "Tot ziens", en: "Goodbye" },
+      { nl: "Tot later", en: "See you later" },
+      { nl: "Alstublieft", en: "Please / Here you go (formal)" },
+      { nl: "Dank u wel", en: "Thank you very much" },
+      { nl: "Graag gedaan", en: "You're welcome" },
+      { nl: "Excuseert u mij", en: "Excuse me (formal)" },
+      { nl: "Sorry", en: "Sorry" },
+    ]
+  },
+  {
+    icon: "🙋", title: "About Yourself",
+    phrases: [
+      { nl: "Mijn naam is Temwa", en: "My name is Temwa" },
+      { nl: "Ik kom uit Malawi", en: "I come from Malawi" },
+      { nl: "Ik woon in …", en: "I live in …" },
+      { nl: "Ik ben getrouwd", en: "I am married" },
+      { nl: "Mijn man heet Jorg", en: "My husband's name is Jorg" },
+      { nl: "Ik heb geen kinderen", en: "I do not have children" },
+      { nl: "Ik leer Nederlands", en: "I am learning Dutch" },
+      { nl: "Ik spreek een beetje Nederlands", en: "I speak a little Dutch" },
+      { nl: "Kunt u dat herhalen?", en: "Can you repeat that?" },
+      { nl: "Ik begrijp het niet", en: "I do not understand" },
+      { nl: "Spreekt u Engels?", en: "Do you speak English?" },
+    ]
+  },
+  {
+    icon: "🏥", title: "Health & Doctors",
+    phrases: [
+      { nl: "Ik ben ziek", en: "I am ill" },
+      { nl: "Ik heb pijn", en: "I am in pain" },
+      { nl: "Ik wil een afspraak maken", en: "I want to make an appointment" },
+      { nl: "Ik heb koorts", en: "I have a fever" },
+      { nl: "Ik heb hoofdpijn", en: "I have a headache" },
+      { nl: "Bel een dokter!", en: "Call a doctor!" },
+      { nl: "Bel 112!", en: "Call 112! (emergency)" },
+      { nl: "Waar is de apotheek?", en: "Where is the pharmacy?" },
+      { nl: "Ik heb een recept", en: "I have a prescription" },
+    ]
+  },
+  {
+    icon: "🛒", title: "Shopping & Money",
+    phrases: [
+      { nl: "Hoeveel kost dit?", en: "How much does this cost?" },
+      { nl: "Ik wil dit kopen", en: "I want to buy this" },
+      { nl: "Heeft u een kleiner maat?", en: "Do you have a smaller size?" },
+      { nl: "Ik betaal met de pas", en: "I pay by card" },
+      { nl: "Kunt u een kassabon geven?", en: "Can you give me a receipt?" },
+      { nl: "Waar is de supermarkt?", en: "Where is the supermarket?" },
+      { nl: "Te duur", en: "Too expensive" },
+    ]
+  },
+  {
+    icon: "🚆", title: "Transport & Directions",
+    phrases: [
+      { nl: "Waar is het station?", en: "Where is the train station?" },
+      { nl: "Een enkeltje naar Amsterdam", en: "A single ticket to Amsterdam" },
+      { nl: "Hoe laat vertrekt de trein?", en: "What time does the train leave?" },
+      { nl: "Ik zoek de bushalte", en: "I am looking for the bus stop" },
+      { nl: "Rechts / Links / Rechtdoor", en: "Right / Left / Straight ahead" },
+      { nl: "Hoe ver is het?", en: "How far is it?" },
+      { nl: "Mag ik uw fiets lenen?", en: "May I borrow your bicycle?" },
+    ]
+  },
+  {
+    icon: "🏛️", title: "Dutch Society (KNS vocabulary)",
+    phrases: [
+      { nl: "de grondwet", en: "the constitution" },
+      { nl: "de minister-president", en: "the prime minister" },
+      { nl: "de Tweede Kamer", en: "the House of Representatives" },
+      { nl: "de dijken", en: "the dikes / levees" },
+      { nl: "de scheiding van kerk en staat", en: "the separation of church and state" },
+      { nl: "de democratie", en: "democracy" },
+      { nl: "de huisarts", en: "the GP / family doctor" },
+      { nl: "de apotheek", en: "the pharmacy" },
+      { nl: "het uitzendbureau", en: "the temp agency" },
+      { nl: "de leerplicht", en: "compulsory education" },
+      { nl: "voortgezet onderwijs", en: "secondary education" },
+      { nl: "de zorgverzekering", en: "health insurance" },
+      { nl: "de gastarbeiders", en: "the guest workers" },
+      { nl: "de vrijheid van meningsuiting", en: "freedom of expression" },
+    ]
+  },
+];
+
+// Speaking Q&A practice
+const speakingQA = [
+  { q: "Hoe heet u?", qen: "What is your name?", a: "Mijn naam is Temwa.", aen: "My name is Temwa." },
+  { q: "Waar woont u?", qen: "Where do you live?", a: "Ik woon in [stad].", aen: "I live in [city]." },
+  { q: "Hoe oud bent u?", qen: "How old are you?", a: "Ik ben [leeftijd] jaar oud.", aen: "I am [age] years old." },
+  { q: "Bent u getrouwd?", qen: "Are you married?", a: "Ja, ik ben getrouwd. Mijn man heet Jorg.", aen: "Yes, I am married. My husband's name is Jorg." },
+  { q: "Heeft u kinderen?", qen: "Do you have children?", a: "Nee, ik heb geen kinderen. / Ja, ik heb [aantal] kinderen.", aen: "No, I don't have children. / Yes, I have [number] children." },
+  { q: "Wat doet u?", qen: "What do you do? (occupation)", a: "Ik leer Nederlands. / Ik werk als …", aen: "I am learning Dutch. / I work as …" },
+  { q: "Wat heeft u gisteren gedaan?", qen: "What did you do yesterday?", a: "Gisteren heb ik Nederlands gestudeerd.", aen: "Yesterday I studied Dutch." },
+  { q: "Wat eet u graag?", qen: "What do you like to eat?", a: "Ik eet graag [eten]. Het is lekker.", aen: "I like to eat [food]. It is delicious." },
+  { q: "Hoe gaat het met u?", qen: "How are you?", a: "Goed, dank u wel. En met u?", aen: "Fine, thank you. And you?" },
+  { q: "Waarom wilt u naar Nederland komen?", qen: "Why do you want to come to the Netherlands?", a: "Ik wil bij mijn man wonen.", aen: "I want to live with my husband." },
+  { q: "Wat vindt u van Nederland?", qen: "What do you think of the Netherlands?", a: "Ik vind Nederland interessant. Ik wil graag Nederlands leren.", aen: "I find the Netherlands interesting. I would like to learn Dutch." },
+  { q: "Kunt u een beetje Nederlands spreken?", qen: "Can you speak a little Dutch?", a: "Ja, een beetje. Ik oefen elke dag.", aen: "Yes, a little. I practise every day." },
+];
+
+// Sentence completion practice
+const sentenceCompletion = [
+  { prompt: "Maria eet veel fruit. Zij vindt fruit ...", promptEn: "Maria eats a lot of fruit. She finds fruit ...", answer: "lekker", answerEn: "tasty / delicious" },
+  { prompt: "Peter is ziek. Hij gaat naar ...", promptEn: "Peter is ill. He goes to ...", answer: "de huisarts", answerEn: "the GP / doctor" },
+  { prompt: "Het is koud buiten. Ik trek een ... aan.", promptEn: "It is cold outside. I put on a ...", answer: "jas", answerEn: "coat" },
+  { prompt: "Ik heb pijn. Ik ga naar ...", promptEn: "I am in pain. I go to ...", answer: "de dokter", answerEn: "the doctor" },
+  { prompt: "Ik wil medicijnen. Ik ga naar ...", promptEn: "I want medicine. I go to ...", answer: "de apotheek", answerEn: "the pharmacy" },
+  { prompt: "De trein gaat naar Amsterdam. Ik koop een ...", promptEn: "The train goes to Amsterdam. I buy a ...", answer: "kaartje", answerEn: "ticket" },
+  { prompt: "Ik zoek werk. Ik ga naar het ...", promptEn: "I am looking for work. I go to the ...", answer: "uitzendbureau", answerEn: "temp agency" },
+  { prompt: "Het kind is zes jaar oud. Het gaat naar ...", promptEn: "The child is six years old. It goes to ...", answer: "school", answerEn: "school" },
+  { prompt: "Ik wil iemand bezoeken. Ik bel eerst om een ... te maken.", promptEn: "I want to visit someone. I call first to make an ...", answer: "afspraak", answerEn: "appointment" },
+  { prompt: "Nederland heeft veel fietsen. Dat is heel ...", promptEn: "The Netherlands has many bicycles. That is very ...", answer: "typisch Nederlands", answerEn: "typically Dutch" },
+];
+
+// ═══════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════
+let state = JSON.parse(localStorage.getItem('inburgeringState') || 'null') || {
+  answered: {},       // { id: 'correct'|'wrong' }
+  readingAnswered: {},
+  streak: 0,
+  lastStudyDate: null,
+  totalAnswered: 0,
+  totalCorrect: 0,
+};
+
+// Quiz state (session only)
+let quiz = {
+  queue: [],
+  idx: 0,
+  correct: 0,
+  wrong: 0,
+  mode: 'all',
+  answered: false,
+  filterTheme: 'all',
+};
+
+let readingQuiz = {
+  queue: [],
+  idx: 0,
+  correct: 0,
+  wrong: 0,
+  answered: false,
+};
+
+let showTranslation = false;
+
+function saveState() {
+  localStorage.setItem('inburgeringState', JSON.stringify(state));
+}
+
+function updateStreak() {
+  const today = new Date().toDateString();
+  if (state.lastStudyDate !== today) {
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+    if (state.lastStudyDate === yesterday) {
+      state.streak++;
+    } else if (state.lastStudyDate !== today) {
+      state.streak = 1;
+    }
+    state.lastStudyDate = today;
+    saveState();
+  }
+}
+
+// ═══════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page' + page.charAt(0).toUpperCase() + page.slice(1)).classList.add('active');
+  document.getElementById('nav' + page.charAt(0).toUpperCase() + page.slice(1)).classList.add('active');
+  if (page === 'home') updateHomeStats();
+  if (page === 'kns') initKnsPage();
+  if (page === 'reading') initReadingPage();
+  if (page === 'speaking') initSpeakingPage();
+  window.scrollTo(0, 0);
+}
+
+// ═══════════════════════════════════════
+//  HOME
+// ═══════════════════════════════════════
+function updateHomeStats() {
+  document.getElementById('statAnswered').textContent = state.totalAnswered;
+  document.getElementById('statCorrect').textContent = state.totalCorrect;
+  document.getElementById('statStreak').textContent = state.streak;
+  document.getElementById('streakBadge').textContent = `🔥 ${state.streak} day${state.streak !== 1 ? 's' : ''}`;
+
+  const knsDone = Object.keys(state.answered).length;
+  document.getElementById('knsProgressBar').style.width = Math.round(knsDone / 100 * 100) + '%';
+
+  const rDone = Object.keys(state.readingAnswered).length;
+  document.getElementById('readingProgressBar').style.width = Math.round(rDone / readingExercises.length * 100) + '%';
+
+  const weakCount = Object.values(state.answered).filter(v => v === 'wrong').length;
+  const banner = document.getElementById('weakBannerHome');
+  if (weakCount > 0) {
+    banner.style.display = 'flex';
+    document.getElementById('weakCount').textContent = weakCount;
+  } else {
+    banner.style.display = 'none';
+  }
+}
+
+// ═══════════════════════════════════════
+//  KNS QUIZ
+// ═══════════════════════════════════════
+function initKnsPage() {
+  buildThemeChips();
+  document.getElementById('knsQuizView').style.display = 'block';
+  document.getElementById('knsScoreView').style.display = 'none';
+  if (quiz.queue.length === 0) buildQueue();
+  renderQuestion();
+}
+
+const themes = ['all', ...new Set(knsQuestions.map(q => q.theme))];
+
+function buildThemeChips() {
+  const el = document.getElementById('themeChips');
+  el.innerHTML = themes.map(t => `<button class="chip ${quiz.filterTheme === t ? 'active' : ''}" onclick="setTheme('${t}')">${t === 'all' ? 'All themes' : t}</button>`).join('');
+}
+
+function setTheme(t) {
+  quiz.filterTheme = t;
+  buildThemeChips();
+  buildQueue();
+  renderQuestion();
+}
+
+function setMode(m) {
+  quiz.mode = m;
+  ['ctrlAll','ctrlWeak','ctrlRandom'].forEach(id => document.getElementById(id).classList.remove('active-ctrl'));
+  document.getElementById('ctrl' + m.charAt(0).toUpperCase() + m.slice(1)).classList.add('active-ctrl');
+  buildQueue();
+  renderQuestion();
+}
+
+function buildQueue() {
+  let pool = knsQuestions;
+  if (quiz.filterTheme !== 'all') pool = pool.filter(q => q.theme === quiz.filterTheme);
+  if (quiz.mode === 'weak') {
+    const weakIds = Object.entries(state.answered).filter(([,v]) => v === 'wrong').map(([k]) => parseInt(k));
+    pool = pool.filter(q => weakIds.includes(q.id));
+    if (pool.length === 0) pool = knsQuestions;
+  }
+  if (quiz.mode === 'random') {
+    pool = [...pool].sort(() => Math.random() - 0.5).slice(0, 30);
+  } else {
+    pool = [...pool].sort(() => Math.random() - 0.5);
+  }
+  quiz.queue = pool;
+  quiz.idx = 0;
+  quiz.correct = 0;
+  quiz.wrong = 0;
+  quiz.answered = false;
+}
+
+function startWeakReview() {
+  showPage('kns');
+  setMode('weak');
+}
+
+function renderQuestion() {
+  if (quiz.idx >= quiz.queue.length) {
+    showScore();
+    return;
+  }
+  const q = quiz.queue[quiz.idx];
+  quiz.answered = false;
+  showTranslation = false;
+  document.getElementById('translateToggle').textContent = '🇬🇧 Show English translation';
+  document.getElementById('questionTranslation').style.display = 'none';
+
+  document.getElementById('qNum').textContent = `Question ${quiz.idx + 1} / ${quiz.queue.length}`;
+  document.getElementById('qScore').textContent = `✅ ${quiz.correct}  ❌ ${quiz.wrong}`;
+  document.getElementById('qProgressFill').style.width = Math.max(2, Math.round((quiz.idx / quiz.queue.length) * 100)) + '%';
+  document.getElementById('themeBadge').textContent = q.theme;
+  document.getElementById('questionText').textContent = q.q;
+  document.getElementById('questionTranslation').textContent = q.qt;
+  document.getElementById('answerAText').textContent = q.a;
+  document.getElementById('answerBText').textContent = q.b;
+
+  ['btnA','btnB'].forEach(id => {
+    const btn = document.getElementById(id);
+    btn.classList.remove('correct','wrong');
+    btn.disabled = false;
+  });
+  document.getElementById('feedbackCard').classList.remove('show');
+  document.getElementById('nextBtn').classList.remove('show');
+}
+
+function toggleTranslation() {
+  showTranslation = !showTranslation;
+  document.getElementById('questionTranslation').style.display = showTranslation ? 'block' : 'none';
+  document.getElementById('translateToggle').textContent = showTranslation ? '🇬🇧 Hide translation' : '🇬🇧 Show English translation';
+}
+
+function submitAnswer(choice) {
+  if (quiz.answered) return;
+  quiz.answered = true;
+  const q = quiz.queue[quiz.idx];
+  const correct = choice === q.correct;
+
+  document.getElementById('btnA').disabled = true;
+  document.getElementById('btnB').disabled = true;
+
+  if (correct) {
+    document.getElementById('btn' + choice.toUpperCase()).classList.add('correct');
+    quiz.correct++;
+    state.answered[q.id] = 'correct';
+    document.getElementById('feedbackHeader').innerHTML = '<span class="fb-correct">✅ Correct!</span>';
+  } else {
+    document.getElementById('btn' + choice.toUpperCase()).classList.add('wrong');
+    document.getElementById('btn' + q.correct.toUpperCase()).classList.add('correct');
+    quiz.wrong++;
+    state.answered[q.id] = 'wrong';
+    document.getElementById('feedbackHeader').innerHTML = '<span class="fb-wrong">❌ Not quite!</span>';
+  }
+
+  const correctText = q.correct === 'a' ? q.a : q.b;
+  document.getElementById('feedbackDetail').textContent = (correct ? '' : `Correct answer: "${correctText}". `) + (q.note || '');
+  document.getElementById('feedbackCard').classList.add('show');
+  document.getElementById('nextBtn').classList.add('show');
+
+  state.totalAnswered++;
+  if (correct) state.totalCorrect++;
+  updateStreak();
+  saveState();
+}
+
+function nextQuestion() {
+  quiz.idx++;
+  renderQuestion();
+}
+
+function showScore() {
+  document.getElementById('knsQuizView').style.display = 'none';
+  document.getElementById('knsScoreView').style.display = 'block';
+  document.getElementById('finalScore').textContent = quiz.correct;
+  document.getElementById('finalDenom').textContent = '/ ' + quiz.queue.length;
+
+  const pct = quiz.queue.length > 0 ? Math.round(quiz.correct / quiz.queue.length * 100) : 0;
+  let title, msg;
+  if (pct >= 90) { title = 'Excellent! 🎉'; msg = 'Amazing score! You\'re almost ready for the real exam!'; }
+  else if (pct >= 70) { title = 'Great work! 👏'; msg = 'Good progress – review the wrong answers and keep going!'; }
+  else if (pct >= 50) { title = 'Keep practising! 💪'; msg = 'You\'re making progress. Focus on the topics you found difficult.'; }
+  else { title = 'Keep going! 📚'; msg = 'Every question you practise makes you stronger. Try again!'; }
+
+  document.getElementById('scoreTitle').textContent = title;
+  document.getElementById('scoreMessage').textContent = msg;
+}
+
+function restartQuiz() {
+  document.getElementById('knsScoreView').style.display = 'none';
+  document.getElementById('knsQuizView').style.display = 'block';
+  buildQueue();
+  renderQuestion();
+}
+
+// ═══════════════════════════════════════
+//  READING
+// ═══════════════════════════════════════
+function initReadingPage() {
+  document.getElementById('readingQuizView').style.display = 'block';
+  document.getElementById('readingScoreView').style.display = 'none';
+  if (readingQuiz.queue.length === 0) buildReadingQueue();
+  renderReadingQ();
+}
+
+function buildReadingQueue() {
+  readingQuiz.queue = [...readingExercises].sort(() => Math.random() - 0.5);
+  readingQuiz.idx = 0;
+  readingQuiz.correct = 0;
+  readingQuiz.wrong = 0;
+  readingQuiz.answered = false;
+}
+
+function renderReadingQ() {
+  if (readingQuiz.idx >= readingQuiz.queue.length) {
+    showReadingScore();
+    return;
+  }
+  const ex = readingQuiz.queue[readingQuiz.idx];
+  readingQuiz.answered = false;
+
+  document.getElementById('rqNum').textContent = `Exercise ${readingQuiz.idx + 1} / ${readingQuiz.queue.length}`;
+  document.getElementById('rqScore').textContent = `✅ ${readingQuiz.correct}  ❌ ${readingQuiz.wrong}`;
+  document.getElementById('rqProgressFill').style.width = Math.max(5, Math.round((readingQuiz.idx / readingQuiz.queue.length) * 100)) + '%';
+  document.getElementById('readingContextLabel').textContent = ex.context;
+  document.getElementById('readingText').textContent = ex.text;
+  document.getElementById('readingQuestion').textContent = ex.question + '\n(' + ex.questionEn + ')';
+
+  const optDiv = document.getElementById('readingOptions');
+  optDiv.innerHTML = ex.options.map((opt, i) =>
+    `<button class="r-answer-btn" onclick="submitReadingAnswer(${i})">${opt}</button>`
+  ).join('');
+
+  document.getElementById('rFeedbackCard').classList.remove('show');
+  document.getElementById('rNextBtn').classList.remove('show');
+}
+
+function submitReadingAnswer(idx) {
+  if (readingQuiz.answered) return;
+  readingQuiz.answered = true;
+  const ex = readingQuiz.queue[readingQuiz.idx];
+  const correct = idx === ex.correct;
+
+  const btns = document.querySelectorAll('.r-answer-btn');
+  btns.forEach(b => b.disabled = true);
+  btns[idx].classList.add(correct ? 'correct' : 'wrong');
+  if (!correct) btns[ex.correct].classList.add('correct');
+
+  if (correct) {
+    readingQuiz.correct++;
+    document.getElementById('rFeedbackHeader').innerHTML = '<span class="fb-correct">✅ Correct!</span>';
+  } else {
+    readingQuiz.wrong++;
+    document.getElementById('rFeedbackHeader').innerHTML = '<span class="fb-wrong">❌ Not quite!</span>';
+  }
+  document.getElementById('rFeedbackDetail').textContent = ex.explanation;
+  document.getElementById('rFeedbackCard').classList.add('show');
+  document.getElementById('rNextBtn').classList.add('show');
+
+  state.readingAnswered[readingQuiz.idx] = correct ? 'correct' : 'wrong';
+  state.totalAnswered++;
+  if (correct) state.totalCorrect++;
+  updateStreak();
+  saveState();
+}
+
+function nextReadingQ() {
+  readingQuiz.idx++;
+  renderReadingQ();
+}
+
+function showReadingScore() {
+  document.getElementById('readingQuizView').style.display = 'none';
+  document.getElementById('readingScoreView').style.display = 'block';
+  const pct = Math.round(readingQuiz.correct / readingQuiz.queue.length * 100);
+  document.getElementById('rFinalScore').textContent = readingQuiz.correct;
+  document.getElementById('rScoreTitle').textContent = pct >= 80 ? 'Excellent reading! 📖' : 'Good effort! 💪';
+  document.getElementById('rScoreMessage').textContent = `You got ${readingQuiz.correct} out of ${readingQuiz.queue.length} correct (${pct}%). ${pct >= 80 ? 'Your reading is strong!' : 'Keep practising with the texts!'}`;
+}
+
+function restartReading() {
+  document.getElementById('readingScoreView').style.display = 'none';
+  document.getElementById('readingQuizView').style.display = 'block';
+  buildReadingQueue();
+  renderReadingQ();
+}
+
+// ═══════════════════════════════════════
+//  SPEAKING
+// ═══════════════════════════════════════
+let currentSpeakTab = 'phrases';
+
+function initSpeakingPage() {
+  renderPhrases();
+  renderQA();
+  renderSentences();
+}
+
+function switchSpeakTab(tab) {
+  currentSpeakTab = tab;
+  ['phrases','qa','sentences'].forEach(t => {
+    document.getElementById(t + 'View').style.display = t === tab ? 'block' : 'none';
+    document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('active', t === tab);
+  });
+}
+
+function speak(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.lang = 'nl-NL';
+    utt.rate = 0.85;
+    window.speechSynthesis.speak(utt);
+  }
+}
+
+function renderPhrases() {
+  document.getElementById('phrasesView').innerHTML = phraseCategories.map((cat, ci) => `
+    <div class="phrase-category">
+      <div class="phrase-cat-header" onclick="toggleCat(${ci})">
+        <span>${cat.icon} ${cat.title}</span>
+        <span id="catArrow${ci}">▼</span>
+      </div>
+      <div class="phrase-list ${ci === 0 ? 'open' : ''}" id="catList${ci}">
+        ${cat.phrases.map(p => `
+          <div class="phrase-item">
+            <div class="phrase-text">
+              <div class="nl">${p.nl}</div>
+              <div class="en">${p.en}</div>
+            </div>
+            <button class="speak-btn" onclick="speak('${p.nl.replace(/'/g, "\\'")}')">🔊</button>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleCat(ci) {
+  const list = document.getElementById('catList' + ci);
+  const arrow = document.getElementById('catArrow' + ci);
+  const open = list.classList.toggle('open');
+  arrow.textContent = open ? '▼' : '▶';
+}
+
+function renderQA() {
+  document.getElementById('qaView').innerHTML = speakingQA.map((item, i) => `
+    <div class="qa-card">
+      <div class="qa-label">Question ${i + 1}</div>
+      <div class="qa-question">${item.q}</div>
+      <div class="qa-translation">${item.qen}</div>
+      <div class="qa-action-row">
+        <button class="qa-action-btn qa-listen" onclick="speak('${item.q.replace(/'/g, "\\'")}')">🔊 Hear question</button>
+        <button class="qa-action-btn qa-show-answer" onclick="toggleQAAnswer(${i})">Show answer</button>
+      </div>
+      <div class="qa-answer-reveal" id="qaAnswer${i}">
+        <div class="answer-nl">${item.a}</div>
+        <div class="answer-en">${item.aen}</div>
+        <div style="margin-top:8px">
+          <button class="qa-action-btn qa-listen" style="font-size:0.82rem" onclick="speak('${item.a.replace(/'/g, "\\'")}')">🔊 Hear answer</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleQAAnswer(i) {
+  const el = document.getElementById('qaAnswer' + i);
+  el.classList.toggle('show');
+}
+
+function renderSentences() {
+  document.getElementById('sentencesView').innerHTML = `
+    <div style="background:#F5F3FF;border-radius:12px;padding:14px 16px;margin-bottom:14px;font-size:0.9rem;color:#5B21B6;">
+      💡 <strong>How to practise:</strong> Read the sentence aloud, then tap 🔊 to check your Dutch. Try to complete the sentence before looking at the answer!
+    </div>
+    ${sentenceCompletion.map((s, i) => `
+      <div class="qa-card">
+        <div class="qa-label">Complete the sentence ${i + 1}</div>
+        <div class="qa-question">${s.prompt}</div>
+        <div class="qa-translation" style="font-size:0.83rem">${s.promptEn}</div>
+        <div class="qa-action-row">
+          <button class="qa-action-btn qa-listen" onclick="speak('${(s.prompt + ' ' + s.answer).replace(/'/g, "\\'")}')">🔊 Hear full sentence</button>
+          <button class="qa-action-btn qa-show-answer" onclick="toggleSentAnswer(${i})">Show answer</button>
+        </div>
+        <div class="qa-answer-reveal" id="sentAnswer${i}">
+          <div class="answer-nl">"… ${s.answer}"</div>
+          <div class="answer-en">${s.answerEn}</div>
+        </div>
+      </div>
+    `).join('')}
+  `;
+}
+
+function toggleSentAnswer(i) {
+  document.getElementById('sentAnswer' + i).classList.toggle('show');
+}
+
+// ═══════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════
+updateStreak();
+updateHomeStats();
+</script>
+</body>
+</html>
