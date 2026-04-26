@@ -536,6 +536,7 @@
       <button class="ctrl-btn active-ctrl" id="ctrlAll" onclick="setMode('all')">All 100</button>
       <button class="ctrl-btn" id="ctrlWeak" onclick="setMode('weak')">Weak only</button>
       <button class="ctrl-btn" id="ctrlRandom" onclick="setMode('random')">Random 30</button>
+      <button class="ctrl-btn" style="color:var(--danger);border-color:#FECACA;" onclick="resetKnsProgress()">🗑️ Reset</button>
     </div>
     <div class="chips" id="themeChips"></div>
     <div class="quiz-progress">
@@ -590,6 +591,9 @@
 <!-- Reading Page -->
 <div id="pageReading" class="page">
   <div id="readingQuizView">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
+      <button class="ctrl-btn" style="color:var(--danger);border-color:#FECACA;flex:none;padding:8px 16px;" onclick="resetReadingProgress()">🗑️ Reset progress</button>
+    </div>
     <div class="quiz-progress">
       <div class="quiz-progress-top">
         <span class="q-num" id="rqNum">Exercise 1 / 20</span>
