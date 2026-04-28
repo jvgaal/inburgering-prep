@@ -208,10 +208,18 @@
   .question-card {
     background: white;
     border-radius: var(--radius);
-    padding: 22px 20px;
+    overflow: hidden;
     margin-bottom: 14px;
     box-shadow: var(--shadow);
-    min-height: 120px;
+  }
+  .question-card .q-photo {
+    width: 100%;
+    aspect-ratio: 420/323;
+    object-fit: cover;
+    display: block;
+  }
+  .question-card .q-body {
+    padding: 16px 18px 18px;
   }
   .question-card .q-text {
     font-size: 1.1rem;
@@ -551,8 +559,11 @@
       🇬🇧 Show English translation
     </button>
     <div class="question-card">
-      <div class="q-text" id="questionText"></div>
-      <div class="q-translation" id="questionTranslation" style="display:none"></div>
+      <img class="q-photo" id="questionPhoto" src="" alt="Examenfoto" loading="lazy">
+      <div class="q-body">
+        <div class="q-text" id="questionText"></div>
+        <div class="q-translation" id="questionTranslation" style="display:none"></div>
+      </div>
     </div>
     <div class="answer-btns">
       <button class="answer-btn" id="btnA" onclick="submitAnswer('a')">
@@ -1107,6 +1118,11 @@ function renderQuestion() {
   document.getElementById('questionTranslation').textContent = q.qt;
   document.getElementById('answerAText').textContent = q.a;
   document.getElementById('answerBText').textContent = q.b;
+  // Load photo (q001.jpg … q100.jpg)
+  const photoEl = document.getElementById('questionPhoto');
+  const photoName = 'q' + String(q.id).padStart(3,'0') + '.jpg';
+  photoEl.src = 'photos/' + photoName;
+  photoEl.style.display = 'block';
 
   ['btnA','btnB'].forEach(id => {
     const btn = document.getElementById(id);
