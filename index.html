@@ -611,18 +611,23 @@
     </div>
     <div class="quiz-progress">
       <div class="quiz-progress-top">
-        <span class="q-num" id="rqNum">Exercise 1 / 20</span>
+        <span class="q-num" id="rqNum">Exercise 1 / 45</span>
         <span id="rqScore">✅ 0 &nbsp; ❌ 0</span>
       </div>
       <div class="progress-bar"><div class="progress-bar-fill" id="rqProgressFill" style="width:5%"></div></div>
     </div>
+    <button class="translate-toggle" id="readingTranslateToggle" onclick="toggleReadingTranslation()" style="margin-bottom:12px">
+      🇬🇧 Show English translation
+    </button>
     <div class="reading-text-card">
       <div class="text-label" id="readingContextLabel">📋 Notice</div>
       <div class="dutch-text" id="readingText"></div>
+      <div class="dutch-text" id="readingTextEn" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.25);font-style:italic;opacity:0.9;font-size:0.95rem"></div>
     </div>
     <div class="reading-question-card">
       <div class="rq-label">❓ Question</div>
       <div class="rq-text" id="readingQuestion"></div>
+      <div class="rq-text" id="readingQuestionEn" style="display:none;font-weight:500;color:var(--muted);font-style:italic;font-size:0.9rem;margin-top:-8px;margin-bottom:14px"></div>
       <div id="readingOptions"></div>
     </div>
     <div class="feedback-card" id="rFeedbackCard">
@@ -635,7 +640,7 @@
     <div class="score-screen">
       <div class="score-circle" style="background: linear-gradient(135deg, var(--blue), #1E40AF);">
         <div class="score-num" id="rFinalScore">0</div>
-        <div class="score-denom">/ 20</div>
+        <div class="score-denom" id="rFinalDenom">/ 45</div>
       </div>
       <h2 id="rScoreTitle">Reading done!</h2>
       <p id="rScoreMessage"></p>
@@ -775,166 +780,51 @@ const knsQuestions = [
 //  DATA — READING EXERCISES (20 questions)
 // ═══════════════════════════════════════
 const readingExercises = [
-  {
-    context: "📋 Sign at a pharmacy",
-    text: "APOTHEEK\nMaandag t/m vrijdag: 08:00 – 18:00\nZaterdag: 09:00 – 13:00\nZondag: GESLOTEN\nSpoedeisend: bel 112",
-    question: "Wanneer is de apotheek gesloten?",
-    questionEn: "When is the pharmacy closed?",
-    options: ["Op zondag", "Op zaterdag", "Op maandag"],
-    correct: 0, explanation: "'Gesloten' means closed. The sign says Zondag: GESLOTEN."
-  },
-  {
-    context: "📋 Sign at a pharmacy",
-    text: "APOTHEEK\nMaandag t/m vrijdag: 08:00 – 18:00\nZaterdag: 09:00 – 13:00\nZondag: GESLOTEN\nSpoedeisend: bel 112",
-    question: "Hoe laat sluit de apotheek op zaterdag?",
-    questionEn: "What time does the pharmacy close on Saturday?",
-    options: ["Om 09:00", "Om 13:00", "Om 18:00"],
-    correct: 1, explanation: "Saturday opening hours are 09:00–13:00, so it closes at 13:00."
-  },
-  {
-    context: "📱 Text message",
-    text: "Hoi Temwa!\nIk ben morgen om 15:00 bij jou thuis.\nKan jij koffie zetten?\nTot morgen! – Maria",
-    question: "Hoe laat komt Maria?",
-    questionEn: "What time is Maria coming?",
-    options: ["Om 13:00", "Om 15:00", "Om 17:00"],
-    correct: 1, explanation: "Maria writes 'om 15:00' – at 3 o'clock in the afternoon."
-  },
-  {
-    context: "📱 Text message",
-    text: "Hoi Temwa!\nIk ben morgen om 15:00 bij jou thuis.\nKan jij koffie zetten?\nTot morgen! – Maria",
-    question: "Wat vraagt Maria aan Temwa?",
-    questionEn: "What does Maria ask Temwa?",
-    options: ["Een afspraak maken", "Koffie zetten", "Naar haar huis komen"],
-    correct: 1, explanation: "'Kan jij koffie zetten?' means 'Can you make coffee?'"
-  },
-  {
-    context: "🚌 Bus notice",
-    text: "LET OP!\nBus 15 rijdt NIET op 27 april (Koningsdag).\nGebruik bus 14 of de metro.\nVoor meer informatie: www.gvb.nl",
-    question: "Welke bus rijdt niet op 27 april?",
-    questionEn: "Which bus does not run on 27 April?",
-    options: ["Bus 12", "Bus 14", "Bus 15"],
-    correct: 2, explanation: "The notice says 'Bus 15 rijdt NIET op 27 april.'"
-  },
-  {
-    context: "🚌 Bus notice",
-    text: "LET OP!\nBus 15 rijdt NIET op 27 april (Koningsdag).\nGebruik bus 14 of de metro.\nVoor meer informatie: www.gvb.nl",
-    question: "Waarom rijdt bus 15 niet op 27 april?",
-    questionEn: "Why does bus 15 not run on 27 April?",
-    options: ["Er is een staking", "Het is Koningsdag", "De bus is kapot"],
-    correct: 1, explanation: "27 april is Koningsdag (King's Day) – a national holiday."
-  },
-  {
-    context: "📋 Doctor's appointment card",
-    text: "Geachte mevrouw,\nU heeft een afspraak bij de huisarts\nop dinsdag 5 mei om 10:30 uur.\nBel 020-123 4567 als u niet kunt komen.\nDoktersPraktijk De Linden",
-    question: "Wanneer is de afspraak bij de huisarts?",
-    questionEn: "When is the appointment at the GP?",
-    options: ["Maandag 5 mei om 10:30", "Dinsdag 5 mei om 10:30", "Woensdag 5 mei om 10:30"],
-    correct: 1, explanation: "The card says 'dinsdag 5 mei om 10:30 uur.'"
-  },
-  {
-    context: "📋 Doctor's appointment card",
-    text: "Geachte mevrouw,\nU heeft een afspraak bij de huisarts\nop dinsdag 5 mei om 10:30 uur.\nBel 020-123 4567 als u niet kunt komen.\nDoktersPraktijk De Linden",
-    question: "Wat moet u doen als u niet kunt komen?",
-    questionEn: "What should you do if you cannot come?",
-    options: ["Een e-mail sturen", "Gewoon wegblijven", "Bellen"],
-    correct: 2, explanation: "'Bel 020-123 4567 als u niet kunt komen' – call if you cannot attend."
-  },
-  {
-    context: "💊 Medicine label",
-    text: "Paracetamol 500 mg\nGebruik: neem 1 tablet bij pijn of koorts.\nMaximaal: 4 tabletten per dag.\nBewaar op kamertemperatuur.\nBuiten bereik van kinderen houden.",
-    question: "Hoeveel tabletten paracetamol mag u per dag nemen?",
-    questionEn: "How many paracetamol tablets may you take per day?",
-    options: ["2 tabletten", "4 tabletten", "6 tabletten"],
-    correct: 1, explanation: "The label says 'Maximaal: 4 tabletten per dag.'"
-  },
-  {
-    context: "💊 Medicine label",
-    text: "Paracetamol 500 mg\nGebruik: neem 1 tablet bij pijn of koorts.\nMaximaal: 4 tabletten per dag.\nBewaar op kamertemperatuur.\nBuiten bereik van kinderen houden.",
-    question: "Wanneer neemt u paracetamol?",
-    questionEn: "When do you take paracetamol?",
-    options: ["Elke dag voor het slapen", "Bij pijn of koorts", "Met het ontbijt"],
-    correct: 1, explanation: "'Neem 1 tablet bij pijn of koorts' – take it for pain or fever."
-  },
-  {
-    context: "🏫 School note",
-    text: "Beste ouders en verzorgers,\nWoensdag 8 mei zijn de kinderen\nom 12:00 uur vrij.\nEr is een studiedag voor de leraren.\nMet vriendelijke groet,\nDirectie OBS De Regenboog",
-    question: "Wanneer zijn de kinderen vroeg vrij?",
-    questionEn: "When do the children finish early?",
-    options: ["Dinsdag 8 mei om 12:00", "Woensdag 8 mei om 12:00", "Woensdag 8 mei om 14:00"],
-    correct: 1, explanation: "The note says 'Woensdag 8 mei om 12:00 uur vrij.'"
-  },
-  {
-    context: "🏫 School note",
-    text: "Beste ouders en verzorgers,\nWoensdag 8 mei zijn de kinderen\nom 12:00 uur vrij.\nEr is een studiedag voor de leraren.\nMet vriendelijke groet,\nDirectie OBS De Regenboog",
-    question: "Waarom zijn de kinderen om 12:00 uur vrij?",
-    questionEn: "Why are the children free at 12:00?",
-    options: ["Er is een feestdag", "Er is een studiedag voor de leraren", "De school is dicht"],
-    correct: 1, explanation: "'Er is een studiedag voor de leraren' – teacher training day."
-  },
-  {
-    context: "🛒 Supermarket offer",
-    text: "AANBIEDING!\nMelk (1 liter): € 0,89\nSinaasappelsap (1 liter): € 1,29\nGeldig van maandag t/m woensdag.\nAlléén bij Albert Heijn.",
-    question: "Hoeveel kost een liter melk?",
-    questionEn: "How much does one litre of milk cost?",
-    options: ["€ 0,79", "€ 0,89", "€ 1,29"],
-    correct: 1, explanation: "The offer shows 'Melk (1 liter): € 0,89.'"
-  },
-  {
-    context: "🛒 Supermarket offer",
-    text: "AANBIEDING!\nMelk (1 liter): € 0,89\nSinaasappelsap (1 liter): € 1,29\nGeldig van maandag t/m woensdag.\nAlléén bij Albert Heijn.",
-    question: "Tot wanneer geldt de aanbieding?",
-    questionEn: "Until when is the offer valid?",
-    options: ["Tot maandag", "Tot woensdag", "Tot vrijdag"],
-    correct: 1, explanation: "'Geldig van maandag t/m woensdag' – valid Monday through Wednesday."
-  },
-  {
-    context: "📋 Gemeentehuis notice",
-    text: "BEKENDMAKING\nHet gemeentehuis is gesloten\nop dinsdag 13 mei.\nU kunt uw paspoort ophalen\nop woensdag 14 mei vanaf 09:00.\nVoor vragen: bel 14020.",
-    question: "Wanneer kunt u uw paspoort ophalen?",
-    questionEn: "When can you collect your passport?",
-    options: ["Dinsdag 13 mei", "Woensdag 14 mei", "Vrijdag 16 mei"],
-    correct: 1, explanation: "'U kunt uw paspoort ophalen op woensdag 14 mei.'"
-  },
-  {
-    context: "📋 Gemeentehuis notice",
-    text: "BEKENDMAKING\nHet gemeentehuis is gesloten\nop dinsdag 13 mei.\nU kunt uw paspoort ophalen\nop woensdag 14 mei vanaf 09:00.\nVoor vragen: bel 14020.",
-    question: "Wanneer is het gemeentehuis gesloten?",
-    questionEn: "When is the municipal hall closed?",
-    options: ["Op maandag 12 mei", "Op dinsdag 13 mei", "Op woensdag 14 mei"],
-    correct: 1, explanation: "'Het gemeentehuis is gesloten op dinsdag 13 mei.'"
-  },
-  {
-    context: "💼 Job advertisement",
-    text: "VACATURE: Schoonmaker/Schoonmaakster\nWerkuren: 08:00 – 12:00\nDagen: maandag t/m vrijdag\nLocatie: Amsterdam Centrum\nBel voor meer info: 06-9876 5432",
-    question: "Hoeveel uur per dag is de schoonmaakbaan?",
-    questionEn: "How many hours per day is the cleaning job?",
-    options: ["2 uur", "4 uur", "8 uur"],
-    correct: 1, explanation: "From 08:00 to 12:00 is 4 hours per day."
-  },
-  {
-    context: "💼 Job advertisement",
-    text: "VACATURE: Schoonmaker/Schoonmaakster\nWerkuren: 08:00 – 12:00\nDagen: maandag t/m vrijdag\nLocatie: Amsterdam Centrum\nBel voor meer info: 06-9876 5432",
-    question: "Op welke dagen is het werk?",
-    questionEn: "On which days is the work?",
-    options: ["Alleen in het weekend", "Maandag t/m vrijdag", "Dinsdag en donderdag"],
-    correct: 1, explanation: "'Maandag t/m vrijdag' means Monday through Friday."
-  },
-  {
-    context: "📚 Library notice",
-    text: "Bibliotheekpas verlengd!\nUw pas is geldig tot en met\n31 december 2026.\nMaximaal 5 boeken tegelijk.\nBoeken zijn 3 weken uit te lenen.\nTe laat? € 0,10 per dag per boek.",
-    question: "Hoeveel boeken mag u tegelijk lenen?",
-    questionEn: "How many books may you borrow at once?",
-    options: ["3 boeken", "5 boeken", "10 boeken"],
-    correct: 1, explanation: "'Maximaal 5 boeken tegelijk' – maximum 5 books at a time."
-  },
-  {
-    context: "📚 Library notice",
-    text: "Bibliotheekpas verlengd!\nUw pas is geldig tot en met\n31 december 2026.\nMaximaal 5 boeken tegelijk.\nBoeken zijn 3 weken uit te lenen.\nTe laat? € 0,10 per dag per boek.",
-    question: "Hoeveel dagen mag u een boek lenen?",
-    questionEn: "How many days may you borrow a book?",
-    options: ["1 week (7 dagen)", "2 weken (14 dagen)", "3 weken (21 dagen)"],
-    correct: 2, explanation: "'Boeken zijn 3 weken uit te lenen' – books are borrowed for 3 weeks."
-  }
+  {"context": "🔤 Spelling", "text": "Welk woord is correct geschreven? (apotheek)", "textEn": "Which word is spelled correctly? (pharmacy)", "question": "Kies het juiste woord:", "questionEn": "Choose the correct word:", "options": ["apothek", "apotheek", "aphoteek", "apoteke"], "correct": 1, "explanation": "'Apotheek' is the correct spelling for pharmacy."},
+  {"context": "🔤 Spelling", "text": "Welk woord is correct geschreven? (ziekenhuis)", "textEn": "Which word is spelled correctly? (hospital)", "question": "Kies het juiste woord:", "questionEn": "Choose the correct word:", "options": ["zikenhus", "ziekenhuis", "sieckenhuis", "zikenhuis"], "correct": 1, "explanation": "'Ziekenhuis' = ziek (sick) + huis (house) = hospital."},
+  {"context": "🔤 Spelling", "text": "Welk woord is correct geschreven? (rijbewijs)", "textEn": "Which word is spelled correctly? (driving licence)", "question": "Kies het juiste woord:", "questionEn": "Choose the correct word:", "options": ["reibewijs", "rijbewijs", "rijbewys", "rijbeweis"], "correct": 1, "explanation": "'Rijbewijs' = rij (drive) + bewijs (proof)."},
+  {"context": "🔤 Spelling", "text": "Welk woord is correct geschreven? (afspraak)", "textEn": "Which word is spelled correctly? (appointment)", "question": "Kies het juiste woord:", "questionEn": "Choose the correct word:", "options": ["afsprak", "afspraak", "afsproak", "afsprack"], "correct": 1, "explanation": "'Afspraak' = an appointment."},
+  {"context": "🔤 Spelling", "text": "Welk woord is correct geschreven? (zorgverzekering)", "textEn": "Which word is spelled correctly? (health insurance)", "question": "Kies het juiste woord:", "questionEn": "Choose the correct word:", "options": ["zorgverzekering", "sorgverzekering", "zorgferzekering", "zorkverzekring"], "correct": 0, "explanation": "'Zorgverzekering' = zorg (care) + verzekering (insurance)."},
+  {"context": "🔤 Spelling", "text": "Welk woord is correct geschreven? (gemeente)", "textEn": "Which word is spelled correctly? (municipality)", "question": "Kies het juiste woord:", "questionEn": "Choose the correct word:", "options": ["gementee", "gemeente", "gemmeente", "gemeenta"], "correct": 1, "explanation": "'Gemeente' is the local municipality."},
+  {"context": "🔤 Spelling", "text": "Welk woord is correct geschreven? (huisarts)", "textEn": "Which word is spelled correctly? (GP)", "question": "Kies het juiste woord:", "questionEn": "Choose the correct word:", "options": ["huisarts", "huisaarts", "huijsarts", "huijzarts"], "correct": 0, "explanation": "'Huisarts' = huis + arts = family doctor / GP."},
+  {"context": "🔤 Spelling", "text": "Welk woord is correct geschreven? (leerling)", "textEn": "Which word is spelled correctly? (pupil)", "question": "Kies het juiste woord:", "questionEn": "Choose the correct word:", "options": ["leerling", "leerlink", "leerlingg", "leering"], "correct": 0, "explanation": "'Leerling' = pupil/student."},
+  {"context": "🔤 Word meaning", "text": "Wat betekent 'apotheek'?", "textEn": "What does 'apotheek' mean?", "question": "Kies de juiste betekenis:", "questionEn": "Choose the correct meaning:", "options": ["bakery", "library", "pharmacy", "supermarket"], "correct": 2, "explanation": "'Apotheek' = pharmacy (where you collect prescriptions)."},
+  {"context": "🔤 Word meaning", "text": "Wat betekent 'huisarts'?", "textEn": "What does 'huisarts' mean?", "question": "Kies de juiste betekenis:", "questionEn": "Choose the correct meaning:", "options": ["homeowner", "house cleaner", "general practitioner (GP)", "real estate agent"], "correct": 2, "explanation": "'Huisarts' is your family doctor / GP."},
+  {"context": "🔤 Word meaning", "text": "Wat betekent 'gemeente'?", "textEn": "What does 'gemeente' mean?", "question": "Kies de juiste betekenis:", "questionEn": "Choose the correct meaning:", "options": ["company", "municipality / local government", "bank", "hospital"], "correct": 1, "explanation": "'Gemeente' is the local municipal government."},
+  {"context": "🔤 Word meaning", "text": "Wat betekent 'verboden'?", "textEn": "What does 'verboden' mean?", "question": "Kies de juiste betekenis:", "questionEn": "Choose the correct meaning:", "options": ["allowed", "forbidden", "cheap", "quiet"], "correct": 1, "explanation": "'Verboden' = forbidden. 'Verboden te roken' = no smoking."},
+  {"context": "🔤 Word meaning", "text": "Wat betekent 'geopend'?", "textEn": "What does 'geopend' mean?", "question": "Kies de juiste betekenis:", "questionEn": "Choose the correct meaning:", "options": ["closed", "busy", "open", "full"], "correct": 2, "explanation": "'Geopend' = open. 'Gesloten' is the opposite."},
+  {"context": "🔤 Word meaning", "text": "Wat betekent 'gratis'?", "textEn": "What does 'gratis' mean?", "question": "Kies de juiste betekenis:", "questionEn": "Choose the correct meaning:", "options": ["expensive", "free of charge", "far away", "forbidden"], "correct": 1, "explanation": "'Gratis' = free of charge."},
+  {"context": "🔤 Word category", "text": "Welk woord hoort bij de categorie 'vervoer'?", "textEn": "Which word belongs to the category 'transport'?", "question": "Kies het juiste woord:", "questionEn": "Choose the correct word:", "options": ["fiets", "brood", "huis", "school"], "correct": 0, "explanation": "'Fiets' = bicycle. The others are bread, house, school."},
+  {"context": "📋 Sign at a pharmacy", "text": "APOTHEEK\nMaandag t/m vrijdag: 08:00 – 18:00\nZaterdag: 09:00 – 13:00\nZondag: GESLOTEN\nSpoedeisend: bel 112", "textEn": "PHARMACY\nMonday to Friday: 08:00 – 18:00\nSaturday: 09:00 – 13:00\nSunday: CLOSED\nEmergencies: call 112", "question": "Wanneer is de apotheek gesloten?", "questionEn": "When is the pharmacy closed?", "options": ["Op zondag", "Op zaterdag", "Op maandag"], "correct": 0, "explanation": "'Gesloten' means closed. The sign says Zondag: GESLOTEN."},
+  {"context": "📋 Sign at a pharmacy", "text": "APOTHEEK\nMaandag t/m vrijdag: 08:00 – 18:00\nZaterdag: 09:00 – 13:00\nZondag: GESLOTEN\nSpoedeisend: bel 112", "textEn": "PHARMACY\nMonday to Friday: 08:00 – 18:00\nSaturday: 09:00 – 13:00\nSunday: CLOSED\nEmergencies: call 112", "question": "Hoe laat sluit de apotheek op zaterdag?", "questionEn": "What time does the pharmacy close on Saturday?", "options": ["Om 09:00", "Om 13:00", "Om 18:00"], "correct": 1, "explanation": "Saturday hours are 09:00–13:00, so it closes at 13:00."},
+  {"context": "📱 Text message", "text": "Hoi Temwa!\nIk ben morgen om 15:00 bij jou thuis.\nKan jij koffie zetten?\nTot morgen! – Maria", "textEn": "Hi Temwa!\nI'll be at your house tomorrow at 15:00.\nCan you make coffee?\nSee you tomorrow! – Maria", "question": "Hoe laat komt Maria?", "questionEn": "What time is Maria coming?", "options": ["Om 13:00", "Om 15:00", "Om 17:00"], "correct": 1, "explanation": "Maria writes 'om 15:00' – at 3 in the afternoon."},
+  {"context": "📱 Text message", "text": "Hoi Temwa!\nIk ben morgen om 15:00 bij jou thuis.\nKan jij koffie zetten?\nTot morgen! – Maria", "textEn": "Hi Temwa!\nI'll be at your house tomorrow at 15:00.\nCan you make coffee?\nSee you tomorrow! – Maria", "question": "Wat vraagt Maria aan Temwa?", "questionEn": "What does Maria ask Temwa?", "options": ["Een afspraak maken", "Koffie zetten", "Naar haar huis komen"], "correct": 1, "explanation": "'Kan jij koffie zetten?' = Can you make coffee?"},
+  {"context": "🚌 Bus notice", "text": "LET OP!\nBus 15 rijdt NIET op 27 april (Koningsdag).\nGebruik bus 14 of de metro.\nVoor meer informatie: www.gvb.nl", "textEn": "ATTENTION!\nBus 15 does NOT run on 27 April (King's Day).\nUse bus 14 or the metro.\nFor more info: www.gvb.nl", "question": "Welke bus rijdt niet op 27 april?", "questionEn": "Which bus does not run on 27 April?", "options": ["Bus 12", "Bus 14", "Bus 15"], "correct": 2, "explanation": "The notice says 'Bus 15 rijdt NIET op 27 april.'"},
+  {"context": "🚌 Bus notice", "text": "LET OP!\nBus 15 rijdt NIET op 27 april (Koningsdag).\nGebruik bus 14 of de metro.\nVoor meer informatie: www.gvb.nl", "textEn": "ATTENTION!\nBus 15 does NOT run on 27 April (King's Day).\nUse bus 14 or the metro.\nFor more info: www.gvb.nl", "question": "Waarom rijdt bus 15 niet op 27 april?", "questionEn": "Why does bus 15 not run on 27 April?", "options": ["Er is een staking", "Het is Koningsdag", "De bus is kapot"], "correct": 1, "explanation": "27 April = Koningsdag (King's Day), a national holiday."},
+  {"context": "📋 Doctor's appointment card", "text": "Geachte mevrouw,\nU heeft een afspraak bij de huisarts\nop dinsdag 5 mei om 10:30 uur.\nBel 020-123 4567 als u niet kunt komen.\nDoktersPraktijk De Linden", "textEn": "Dear madam,\nYou have an appointment with the GP\non Tuesday 5 May at 10:30.\nCall 020-123 4567 if you cannot come.\nDoctor's Practice De Linden", "question": "Wanneer is de afspraak bij de huisarts?", "questionEn": "When is the appointment at the GP?", "options": ["Maandag 5 mei om 10:30", "Dinsdag 5 mei om 10:30", "Woensdag 5 mei om 10:30"], "correct": 1, "explanation": "The card says 'dinsdag 5 mei om 10:30 uur.'"},
+  {"context": "📋 Doctor's appointment card", "text": "Geachte mevrouw,\nU heeft een afspraak bij de huisarts\nop dinsdag 5 mei om 10:30 uur.\nBel 020-123 4567 als u niet kunt komen.\nDoktersPraktijk De Linden", "textEn": "Dear madam,\nYou have an appointment with the GP\non Tuesday 5 May at 10:30.\nCall 020-123 4567 if you cannot come.\nDoctor's Practice De Linden", "question": "Wat moet u doen als u niet kunt komen?", "questionEn": "What should you do if you cannot come?", "options": ["Een e-mail sturen", "Gewoon wegblijven", "Bellen"], "correct": 2, "explanation": "'Bel ... als u niet kunt komen' – call if you cannot attend."},
+  {"context": "💊 Medicine label", "text": "Paracetamol 500 mg\nGebruik: neem 1 tablet bij pijn of koorts.\nMaximaal: 4 tabletten per dag.\nBewaar op kamertemperatuur.\nBuiten bereik van kinderen houden.", "textEn": "Paracetamol 500 mg\nUse: take 1 tablet for pain or fever.\nMaximum: 4 tablets per day.\nStore at room temperature.\nKeep out of reach of children.", "question": "Hoeveel tabletten paracetamol mag u per dag nemen?", "questionEn": "How many paracetamol tablets per day?", "options": ["2 tabletten", "4 tabletten", "6 tabletten"], "correct": 1, "explanation": "'Maximaal: 4 tabletten per dag.'"},
+  {"context": "💊 Medicine label", "text": "Paracetamol 500 mg\nGebruik: neem 1 tablet bij pijn of koorts.\nMaximaal: 4 tabletten per dag.\nBewaar op kamertemperatuur.\nBuiten bereik van kinderen houden.", "textEn": "Paracetamol 500 mg\nUse: take 1 tablet for pain or fever.\nMaximum: 4 tablets per day.\nStore at room temperature.\nKeep out of reach of children.", "question": "Wanneer neemt u paracetamol?", "questionEn": "When do you take paracetamol?", "options": ["Elke dag voor het slapen", "Bij pijn of koorts", "Met het ontbijt"], "correct": 1, "explanation": "'Neem 1 tablet bij pijn of koorts.'"},
+  {"context": "🏫 School note", "text": "Beste ouders en verzorgers,\nWoensdag 8 mei zijn de kinderen\nom 12:00 uur vrij.\nEr is een studiedag voor de leraren.\nMet vriendelijke groet,\nDirectie OBS De Regenboog", "textEn": "Dear parents and carers,\nOn Wednesday 8 May the children\nfinish at 12:00.\nThere is a study day for the teachers.\nKind regards,\nManagement OBS De Regenboog", "question": "Wanneer zijn de kinderen vroeg vrij?", "questionEn": "When do the children finish early?", "options": ["Dinsdag 8 mei om 12:00", "Woensdag 8 mei om 12:00", "Woensdag 8 mei om 14:00"], "correct": 1, "explanation": "'Woensdag 8 mei om 12:00 uur vrij.'"},
+  {"context": "🏫 School note", "text": "Beste ouders en verzorgers,\nWoensdag 8 mei zijn de kinderen\nom 12:00 uur vrij.\nEr is een studiedag voor de leraren.\nMet vriendelijke groet,\nDirectie OBS De Regenboog", "textEn": "Dear parents and carers,\nOn Wednesday 8 May the children\nfinish at 12:00.\nThere is a study day for the teachers.\nKind regards,\nManagement OBS De Regenboog", "question": "Waarom zijn de kinderen om 12:00 uur vrij?", "questionEn": "Why are the children free at 12:00?", "options": ["Er is een feestdag", "Er is een studiedag voor de leraren", "De school is dicht"], "correct": 1, "explanation": "'Er is een studiedag voor de leraren.'"},
+  {"context": "🛒 Supermarket offer", "text": "AANBIEDING!\nMelk (1 liter): € 0,89\nSinaasappelsap (1 liter): € 1,29\nGeldig van maandag t/m woensdag.\nAlléén bij Albert Heijn.", "textEn": "OFFER!\nMilk (1 litre): € 0.89\nOrange juice (1 litre): € 1.29\nValid Monday through Wednesday.\nOnly at Albert Heijn.", "question": "Hoeveel kost een liter melk?", "questionEn": "How much does one litre of milk cost?", "options": ["€ 0,79", "€ 0,89", "€ 1,29"], "correct": 1, "explanation": "'Melk (1 liter): € 0,89.'"},
+  {"context": "🛒 Supermarket offer", "text": "AANBIEDING!\nMelk (1 liter): € 0,89\nSinaasappelsap (1 liter): € 1,29\nGeldig van maandag t/m woensdag.\nAlléén bij Albert Heijn.", "textEn": "OFFER!\nMilk (1 litre): € 0.89\nOrange juice (1 litre): € 1.29\nValid Monday through Wednesday.\nOnly at Albert Heijn.", "question": "Tot wanneer geldt de aanbieding?", "questionEn": "Until when is the offer valid?", "options": ["Tot maandag", "Tot woensdag", "Tot vrijdag"], "correct": 1, "explanation": "'Geldig van maandag t/m woensdag.'"},
+  {"context": "📋 Gemeentehuis notice", "text": "BEKENDMAKING\nHet gemeentehuis is gesloten\nop dinsdag 13 mei.\nU kunt uw paspoort ophalen\nop woensdag 14 mei vanaf 09:00.\nVoor vragen: bel 14020.", "textEn": "ANNOUNCEMENT\nThe municipal hall is closed\non Tuesday 13 May.\nYou can collect your passport\non Wednesday 14 May from 09:00.\nFor questions: call 14020.", "question": "Wanneer kunt u uw paspoort ophalen?", "questionEn": "When can you collect your passport?", "options": ["Dinsdag 13 mei", "Woensdag 14 mei", "Vrijdag 16 mei"], "correct": 1, "explanation": "'U kunt uw paspoort ophalen op woensdag 14 mei.'"},
+  {"context": "📋 Gemeentehuis notice", "text": "BEKENDMAKING\nHet gemeentehuis is gesloten\nop dinsdag 13 mei.\nU kunt uw paspoort ophalen\nop woensdag 14 mei vanaf 09:00.\nVoor vragen: bel 14020.", "textEn": "ANNOUNCEMENT\nThe municipal hall is closed\non Tuesday 13 May.\nYou can collect your passport\non Wednesday 14 May from 09:00.\nFor questions: call 14020.", "question": "Wanneer is het gemeentehuis gesloten?", "questionEn": "When is the municipal hall closed?", "options": ["Op maandag 12 mei", "Op dinsdag 13 mei", "Op woensdag 14 mei"], "correct": 1, "explanation": "'Het gemeentehuis is gesloten op dinsdag 13 mei.'"},
+  {"context": "💼 Job advertisement", "text": "VACATURE: Schoonmaker/Schoonmaakster\nWerkuren: 08:00 – 12:00\nDagen: maandag t/m vrijdag\nLocatie: Amsterdam Centrum\nBel voor meer info: 06-9876 5432", "textEn": "VACANCY: Cleaner (m/f)\nWorking hours: 08:00 – 12:00\nDays: Monday to Friday\nLocation: Amsterdam Centre\nCall for more info: 06-9876 5432", "question": "Hoeveel uur per dag is de schoonmaakbaan?", "questionEn": "How many hours per day is the cleaning job?", "options": ["2 uur", "4 uur", "8 uur"], "correct": 1, "explanation": "From 08:00 to 12:00 is 4 hours per day."},
+  {"context": "💼 Job advertisement", "text": "VACATURE: Schoonmaker/Schoonmaakster\nWerkuren: 08:00 – 12:00\nDagen: maandag t/m vrijdag\nLocatie: Amsterdam Centrum\nBel voor meer info: 06-9876 5432", "textEn": "VACANCY: Cleaner (m/f)\nWorking hours: 08:00 – 12:00\nDays: Monday to Friday\nLocation: Amsterdam Centre\nCall for more info: 06-9876 5432", "question": "Op welke dagen is het werk?", "questionEn": "On which days is the work?", "options": ["Alleen in het weekend", "Maandag t/m vrijdag", "Dinsdag en donderdag"], "correct": 1, "explanation": "'Maandag t/m vrijdag' = Monday through Friday."},
+  {"context": "📚 Library notice", "text": "Bibliotheekpas verlengd!\nUw pas is geldig tot en met\n31 december 2026.\nMaximaal 5 boeken tegelijk.\nBoeken zijn 3 weken uit te lenen.\nTe laat? € 0,10 per dag per boek.", "textEn": "Library card renewed!\nYour card is valid until\n31 December 2026.\nMaximum 5 books at a time.\nBooks can be borrowed for 3 weeks.\nLate? € 0.10 per day per book.", "question": "Hoeveel boeken mag u tegelijk lenen?", "questionEn": "How many books may you borrow at once?", "options": ["3 boeken", "5 boeken", "10 boeken"], "correct": 1, "explanation": "'Maximaal 5 boeken tegelijk.'"},
+  {"context": "📚 Library notice", "text": "Bibliotheekpas verlengd!\nUw pas is geldig tot en met\n31 december 2026.\nMaximaal 5 boeken tegelijk.\nBoeken zijn 3 weken uit te lenen.\nTe laat? € 0,10 per dag per boek.", "textEn": "Library card renewed!\nYour card is valid until\n31 December 2026.\nMaximum 5 books at a time.\nBooks can be borrowed for 3 weeks.\nLate? € 0.10 per day per book.", "question": "Hoeveel dagen mag u een boek lenen?", "questionEn": "How many days may you borrow a book?", "options": ["1 week (7 dagen)", "2 weken (14 dagen)", "3 weken (21 dagen)"], "correct": 2, "explanation": "'Boeken zijn 3 weken uit te lenen.'"},
+  {"context": "💼 Payslip", "text": "LOONSTROOK – maart 2026\nMedewerker: T. Dlamini\nFunctie: schoonmaker\nUren gewerkt: 80\nBruto loon: € 1.200,00\nNetto loon: € 980,00\nUitbetaald op: 28 maart", "textEn": "PAYSLIP – March 2026\nEmployee: T. Dlamini\nRole: cleaner\nHours worked: 80\nGross pay: € 1,200.00\nNet pay: € 980.00\nPaid on: 28 March", "question": "Hoeveel uur heeft Temwa in maart gewerkt?", "questionEn": "How many hours did Temwa work in March?", "options": ["40 uur", "60 uur", "80 uur", "100 uur"], "correct": 2, "explanation": "'Uren gewerkt: 80' = 80 hours."},
+  {"context": "💼 Payslip", "text": "LOONSTROOK – maart 2026\nMedewerker: T. Dlamini\nFunctie: schoonmaker\nUren gewerkt: 80\nBruto loon: € 1.200,00\nNetto loon: € 980,00\nUitbetaald op: 28 maart", "textEn": "PAYSLIP – March 2026\nEmployee: T. Dlamini\nRole: cleaner\nHours worked: 80\nGross pay: € 1,200.00\nNet pay: € 980.00\nPaid on: 28 March", "question": "Wanneer wordt het loon betaald?", "questionEn": "When is the salary paid?", "options": ["Op 1 maart", "Op 15 maart", "Op 28 maart", "Op 31 maart"], "correct": 2, "explanation": "'Uitbetaald op: 28 maart.'"},
+  {"context": "🚂 Train ticket", "text": "NS – Treinkaartje\nVan: Amsterdam Centraal\nNaar: Den Bosch\nVertrek: 09:15\nAankomst: 10:32\nSpoor: 5\nPrijs: € 17,50", "textEn": "NS – Train ticket\nFrom: Amsterdam Central\nTo: Den Bosch\nDeparture: 09:15\nArrival: 10:32\nPlatform: 5\nPrice: € 17.50", "question": "Vanaf welk spoor vertrekt de trein?", "questionEn": "From which platform does the train depart?", "options": ["Spoor 3", "Spoor 5", "Spoor 7"], "correct": 1, "explanation": "'Spoor: 5' – platform 5."},
+  {"context": "🚂 Train ticket", "text": "NS – Treinkaartje\nVan: Amsterdam Centraal\nNaar: Den Bosch\nVertrek: 09:15\nAankomst: 10:32\nSpoor: 5\nPrijs: € 17,50", "textEn": "NS – Train ticket\nFrom: Amsterdam Central\nTo: Den Bosch\nDeparture: 09:15\nArrival: 10:32\nPlatform: 5\nPrice: € 17.50", "question": "Hoe lang duurt de reis?", "questionEn": "How long does the journey take?", "options": ["Ongeveer 30 minuten", "Ongeveer 1 uur en 17 minuten", "Ongeveer 2 uur", "Ongeveer 3 uur"], "correct": 1, "explanation": "From 09:15 to 10:32 = 1 hour 17 minutes."},
+  {"context": "🏫 Parent letter", "text": "Beste ouders,\nOp vrijdag 12 juni gaan groep 5 en 6\nop schoolreisje naar Burgers' Zoo.\nVertrek: 08:30 vanaf school.\nTerug: 16:30 op school.\nKosten: € 25 per kind.\nGraag betalen voor 1 juni.", "textEn": "Dear parents,\nOn Friday 12 June groups 5 and 6 are going\non a school trip to Burgers' Zoo.\nDeparture: 08:30 from school.\nReturn: 16:30 at school.\nCost: € 25 per child.\nPlease pay before 1 June.", "question": "Wanneer is het schoolreisje?", "questionEn": "When is the school trip?", "options": ["Donderdag 12 juni", "Vrijdag 12 juni", "Zaterdag 12 juni", "Maandag 12 juni"], "correct": 1, "explanation": "'Op vrijdag 12 juni'."},
+  {"context": "🏫 Parent letter", "text": "Beste ouders,\nOp vrijdag 12 juni gaan groep 5 en 6\nop schoolreisje naar Burgers' Zoo.\nVertrek: 08:30 vanaf school.\nTerug: 16:30 op school.\nKosten: € 25 per kind.\nGraag betalen voor 1 juni.", "textEn": "Dear parents,\nOn Friday 12 June groups 5 and 6 are going\non a school trip to Burgers' Zoo.\nDeparture: 08:30 from school.\nReturn: 16:30 at school.\nCost: € 25 per child.\nPlease pay before 1 June.", "question": "Wanneer moeten ouders betalen?", "questionEn": "When must parents pay?", "options": ["Voor 1 juni", "Voor 12 juni", "Op de dag zelf", "Na het schoolreisje"], "correct": 0, "explanation": "'Graag betalen voor 1 juni.'"},
+  {"context": "🏧 ATM message", "text": "GELDAUTOMAAT\nUw saldo: € 450,00\nWilt u een uitdraai?\n– Ja\n– Nee\nKies een bedrag:\n€ 20  € 50  € 100  € 200", "textEn": "ATM\nYour balance: € 450.00\nDo you want a printout?\n– Yes\n– No\nChoose an amount:\n€ 20  € 50  € 100  € 200", "question": "Wat is uw saldo?", "questionEn": "What is your account balance?", "options": ["€ 50,00", "€ 100,00", "€ 200,00", "€ 450,00"], "correct": 3, "explanation": "'Uw saldo: € 450,00.'"},
+  {"context": "📮 Post office notice", "text": "PostNL – Niet thuis\nWij hebben uw pakket niet kunnen bezorgen.\nU kunt het pakket ophalen bij:\nAlbert Heijn, Hoofdstraat 12\nVanaf morgen, openingstijden 08:00 – 22:00.\nMeenemen: dit briefje + ID-kaart.", "textEn": "PostNL – Not at home\nWe could not deliver your parcel.\nYou can collect the parcel at:\nAlbert Heijn, Hoofdstraat 12\nFrom tomorrow, opening hours 08:00 – 22:00.\nBring: this note + ID card.", "question": "Wat moet u meenemen om het pakket op te halen?", "questionEn": "What must you bring to collect the parcel?", "options": ["Alleen dit briefje", "Alleen uw ID", "Dit briefje en uw ID-kaart", "Alleen geld"], "correct": 2, "explanation": "'Meenemen: dit briefje + ID-kaart.'"},
+  {"context": "🍽️ Restaurant menu", "text": "LUNCHMENU – elke werkdag\n12:00 – 14:00\nSoep van de dag: € 5,50\nBroodje kaas: € 4,75\nUitsmijter ham: € 7,50\nSalade kip: € 8,95\nKoffie of thee: € 2,50", "textEn": "LUNCH MENU – every weekday\n12:00 – 14:00\nSoup of the day: € 5.50\nCheese sandwich: € 4.75\nHam uitsmijter (eggs+ham): € 7.50\nChicken salad: € 8.95\nCoffee or tea: € 2.50", "question": "Hoeveel kost een uitsmijter met ham?", "questionEn": "How much does a ham uitsmijter cost?", "options": ["€ 4,75", "€ 5,50", "€ 7,50", "€ 8,95"], "correct": 2, "explanation": "'Uitsmijter ham: € 7,50.'"},
+  {"context": "🍽️ Restaurant menu", "text": "LUNCHMENU – elke werkdag\n12:00 – 14:00\nSoep van de dag: € 5,50\nBroodje kaas: € 4,75\nUitsmijter ham: € 7,50\nSalade kip: € 8,95\nKoffie of thee: € 2,50", "textEn": "LUNCH MENU – every weekday\n12:00 – 14:00\nSoup of the day: € 5.50\nCheese sandwich: € 4.75\nHam uitsmijter (eggs+ham): € 7.50\nChicken salad: € 8.95\nCoffee or tea: € 2.50", "question": "Wanneer kunt u het lunchmenu bestellen?", "questionEn": "When can you order the lunch menu?", "options": ["In het weekend", "Tussen 12:00 en 14:00 op werkdagen", "Alleen op zondag", "De hele dag"], "correct": 1, "explanation": "'Elke werkdag 12:00 – 14:00.'"},
 ];
 
 
@@ -970,6 +860,7 @@ let readingQuiz = {
 };
 
 let showTranslation = false;
+let readingShowTranslation = false;
 
 function saveState() {
   localStorage.setItem('inburgeringState', JSON.stringify(state));
@@ -1126,6 +1017,13 @@ function toggleTranslation() {
   document.getElementById('translateToggle').textContent = showTranslation ? '🇬🇧 Hide translation' : '🇬🇧 Show English translation';
 }
 
+function toggleReadingTranslation() {
+  readingShowTranslation = !readingShowTranslation;
+  document.getElementById('readingTextEn').style.display = readingShowTranslation ? 'block' : 'none';
+  document.getElementById('readingQuestionEn').style.display = readingShowTranslation ? 'block' : 'none';
+  document.getElementById('readingTranslateToggle').textContent = readingShowTranslation ? '🇬🇧 Hide translation' : '🇬🇧 Show English translation';
+}
+
 function submitAnswer(choice) {
   if (quiz.answered) return;
   quiz.answered = true;
@@ -1219,7 +1117,13 @@ function renderReadingQ() {
   document.getElementById('rqProgressFill').style.width = Math.max(5, Math.round((readingQuiz.idx / readingQuiz.queue.length) * 100)) + '%';
   document.getElementById('readingContextLabel').textContent = ex.context;
   document.getElementById('readingText').textContent = ex.text;
-  document.getElementById('readingQuestion').textContent = ex.question + '\n(' + ex.questionEn + ')';
+  document.getElementById('readingTextEn').textContent = ex.textEn || '';
+  document.getElementById('readingQuestion').textContent = ex.question;
+  document.getElementById('readingQuestionEn').textContent = ex.questionEn || '';
+  // Apply current translation visibility
+  const showEn = readingShowTranslation;
+  document.getElementById('readingTextEn').style.display = showEn ? 'block' : 'none';
+  document.getElementById('readingQuestionEn').style.display = showEn ? 'block' : 'none';
 
   const optDiv = document.getElementById('readingOptions');
   optDiv.innerHTML = ex.options.map((opt, i) =>
@@ -1269,6 +1173,7 @@ function showReadingScore() {
   document.getElementById('readingScoreView').style.display = 'block';
   const pct = Math.round(readingQuiz.correct / readingQuiz.queue.length * 100);
   document.getElementById('rFinalScore').textContent = readingQuiz.correct;
+  document.getElementById('rFinalDenom').textContent = '/ ' + readingQuiz.queue.length;
   document.getElementById('rScoreTitle').textContent = pct >= 80 ? 'Excellent reading! 📖' : 'Good effort! 💪';
   document.getElementById('rScoreMessage').textContent = `You got ${readingQuiz.correct} out of ${readingQuiz.queue.length} correct (${pct}%). ${pct >= 80 ? 'Your reading is strong!' : 'Keep practising with the texts!'}`;
 }
