@@ -1105,10 +1105,10 @@ function renderQuestion() {
   document.getElementById('questionTranslation').textContent = q.qt;
   document.getElementById('answerAText').textContent = q.a;
   document.getElementById('answerBText').textContent = q.b;
-  // Load photo (q001.jpg … q100.jpg)
+  // Load photo (q001.jpg … q100.jpg) — v2 forces cache refresh
   const photoEl = document.getElementById('questionPhoto');
   const photoName = 'q' + String(q.id).padStart(3,'0') + '.jpg';
-  photoEl.src = 'photos/' + photoName;
+  photoEl.src = 'photos/' + photoName + '?v=2';
   photoEl.style.display = 'block';
 
   ['btnA','btnB'].forEach(id => {
